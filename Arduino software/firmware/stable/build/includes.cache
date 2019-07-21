@@ -1,0 +1,92 @@
+[
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "/home/sam_s3p10l/.arduino15/packages/arduino/hardware/avr/1.6.23/cores/arduino"
+  },
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "/home/sam_s3p10l/.arduino15/packages/arduino/hardware/avr/1.6.23/variants/leonardo"
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Scaricati/Arduino/SELF-BALANCING ROBOT/firmware/stable/build/sketch/stable.ino.cpp",
+    "Include": "MPU6050.h",
+    "Includepath": "/home/sam_s3p10l/Arduino/libraries/MPU6050"
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Scaricati/Arduino/SELF-BALANCING ROBOT/firmware/stable/build/sketch/stable.ino.cpp",
+    "Include": "I2Cdev.h",
+    "Includepath": "/home/sam_s3p10l/Arduino/libraries/I2Cdev"
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Scaricati/Arduino/SELF-BALANCING ROBOT/firmware/stable/build/sketch/stable.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/sam_s3p10l/.arduino15/packages/arduino/hardware/avr/1.6.23/libraries/Wire/src"
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Scaricati/Arduino/SELF-BALANCING ROBOT/firmware/stable/build/sketch/stable.ino.cpp",
+    "Include": "EEPROM.h",
+    "Includepath": "/home/sam_s3p10l/.arduino15/packages/arduino/hardware/avr/1.6.23/libraries/EEPROM/src"
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Scaricati/Arduino/SELF-BALANCING ROBOT/firmware/stable/build/sketch/stable.ino.cpp",
+    "Include": "Servo.h",
+    "Includepath": "/home/sam_s3p10l/Arduino/libraries/Servo/src"
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Scaricati/Arduino/SELF-BALANCING ROBOT/firmware/stable/build/sketch/stable.ino.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/MPU6050/MPU6050.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/I2Cdev/I2Cdev.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/.arduino15/packages/arduino/hardware/avr/1.6.23/libraries/Wire/src/Wire.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/.arduino15/packages/arduino/hardware/avr/1.6.23/libraries/Wire/src/utility/twi.c",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/Servo/src/avr/Servo.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/Servo/src/megaavr/Servo.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/Servo/src/nrf52/Servo.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/Servo/src/sam/Servo.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/Servo/src/samd/Servo.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/home/sam_s3p10l/Arduino/libraries/Servo/src/stm32f4/Servo.cpp",
+    "Include": "",
+    "Includepath": ""
+  }
+]
