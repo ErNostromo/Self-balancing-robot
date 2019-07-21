@@ -14,7 +14,7 @@ This repository is used by me, ErNostromo, to keep track of all the files i need
 - "./YABR/": probably the most important folder, it contains the original project i got inspired from. Since it's from a youtube video i'll put a link to it as soon as i can.
 
 ## TODO
-- Add Raspberry Pi software. Originally this was supposed to include a Raspberry Pi, but I had some problems with the power so i stopped developing for it. But now that Raspy 4 is out I'll probably include again to add a feature of object detection.
+- Add Raspberry Pi software (once I understand which ones of the thousands files are worth publishing). Originally this was supposed to include a Raspberry Pi, but I had some problems with the power so i stopped developing for it. But now that Raspy 4 is out I'll probably include again to add a feature of object detection.
 
 - Revise board schematics and PCB.
 
