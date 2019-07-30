@@ -18,4 +18,6 @@ This repository is used by me, ErNostromo, to keep track of all the files i need
 
 - Revise board schematics and PCB.
 
+- Add datasheets
+
 Author: Francesco Berton
