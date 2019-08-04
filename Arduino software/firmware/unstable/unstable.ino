@@ -2,7 +2,6 @@
 //TODO: add previous value check in processing app
 //TODO: fix turning_speed not working
 //TODO: fix instant speed cut when falling ("add negative acceleration")
-//TODO: create pc interface
 
 //https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/MPU6050.cpp#L209
 
