@@ -7,7 +7,7 @@ public class SliderTester extends PApplet {
     Slider s1;
 
     public static void main(String[] args) {
-        PApplet.main("remote.SliderTest");
+        PApplet.main("remote.testers.SliderTester");
     }
 
     public void settings() {

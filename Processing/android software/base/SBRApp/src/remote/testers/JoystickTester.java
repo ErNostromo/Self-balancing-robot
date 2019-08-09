@@ -8,7 +8,7 @@ public class JoystickTester extends PApplet {
     private long t;
 
     public static void main(String[] args) {
-        PApplet.main("pad.Test");
+        PApplet.main("remote.testers.JoystickTester");
     }
 
     public void settings() {
