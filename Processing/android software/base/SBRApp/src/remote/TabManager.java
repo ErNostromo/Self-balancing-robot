@@ -69,17 +69,20 @@ public class TabManager implements Drawable {
      * @param tabName the name of the new Tab
      */
     public void addTab(String tabName) {
-        p.textSize(16);
+        // Set the correct row
+        p.textSize(charDimension);
         if (nextX + p.textWidth(tabName) + 20 > p.width) {
             row++;
             nextX = 0;
         }
         Tab t = new Tab(p, nextX, row * height, p.textWidth(tabName) + 20, height, tabName);
         tabs.add(t);
+        // activate the first tab by default
         if (tabs.size() <= 1)
             t.activated = true;
         System.out.println("Added tab at x " + t.pos.x + ", y " + t.pos.y + ", width " + t.size.x + ", height "
                 + t.size.y + ", name " + t.name);
+        // update the next tab position
         nextX += t.size.x;
     }
 
@@ -94,39 +97,62 @@ public class TabManager implements Drawable {
         tabs.elementAt(tab).drawables.add(d);
     }
 
+    /**
+     * Get the Drawable-s stored inside the specified tab
+     * @param tab the tab index
+     * @return an array of Drawable
+     */
     public Drawable[] getDrawables(int tab) {
         return tabs.elementAt(tab).drawables.toArray(new Drawable[0]);
     }
 
     /**
-     * Get the currently active Tab and update all the Drawables included.
+     * Get the Drawable-s stored inside the currently active tab
+     * @return an array of Drawable
+     */
+    public Drawable[] getDrawables() {
+        return tabs.elementAt(activeTab).drawables.toArray(new Drawable[0]);
+    }
+
+    /**
+     * Get the currently active tab; if the Drawable-s stored are NOT InputDrawable-s,
+     * update them; otherwise get the activeDrawable (using isBeingUsed()) and update it.
      */
     @Override
     public void update() {
         for (int currentTab = 0; currentTab < tabs.size(); currentTab++) {
             Tab t = tabs.elementAt(currentTab);
+            // De-activate all the tabs except the currently active one
             if (currentTab != activeTab)
                 t.activated = false;
+
+            // if there is no activeDrawable, check if we should change activeTab
             if (activeDrawable == null && p.mousePressed && t.isOver(p.mouseX, p.mouseY)) {
                 t.activated = true;
                 activeTab = currentTab;
             }
 
+            // update the currently activeTab
             if (activeTab == currentTab) {
                 for (Drawable d : t.drawables) {
+                    // if the Drawable is an InputDrawable we must check the activeDrawable...
                     if (d instanceof InputDrawable) {
                         InputDrawable in = (InputDrawable) d;
+                        // if we have no activeDrawable update the Drawable
                         if (activeDrawable == null) {
                             in.update();
+                            // change the activeDrawable if the current Drawable isBeingUsed() (clicked, dragged, etc)
                             if (in.isBeingUsed())
                                 activeDrawable = in;
-                        } else {
+                        } else { // else only update the activeDrawable
                             activeDrawable.update();
+                            // but when the mouse gets released and the activeDrawable isn't being used anymore
+                            // we set it back to null
                             if (!p.mousePressed && !activeDrawable.isBeingUsed()) {
                                 activeDrawable = null;
                             }
                         }
-                    } else {
+                    } else { // ... otherwise just update it
                         d.update();
                     }
                 }
@@ -155,6 +181,7 @@ public class TabManager implements Drawable {
                     t.drawables.elementAt(j).updateDraw();
                 }
 
+            // fill the spaces left from the tabs
             if (i >= tabs.size() - 1 || tabs.elementAt(i + 1).pos.y > t.pos.y) {
                 p.fill(240);
                 p.rectMode(PConstants.CORNERS);
