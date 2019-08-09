@@ -22,7 +22,6 @@ public class TabManager implements Drawable {
 
     private class Tab {
         private String name;
-        private boolean activated;
 
         public Vector<Drawable> drawables;
         public PVector pos, size;
@@ -34,7 +33,6 @@ public class TabManager implements Drawable {
             name = tabName;
 
             drawables = new Vector<Drawable>();
-            activated = false;
         }
 
         public Tab(PApplet main, float x, float y, float w, float h, String tabName) {
@@ -79,7 +77,7 @@ public class TabManager implements Drawable {
         tabs.add(t);
         // activate the first tab by default
         if (tabs.size() <= 1)
-            t.activated = true;
+            activeTab = 0;
         System.out.println("Added tab at x " + t.pos.x + ", y " + t.pos.y + ", width " + t.size.x + ", height "
                 + t.size.y + ", name " + t.name);
         // update the next tab position
@@ -122,13 +120,9 @@ public class TabManager implements Drawable {
     public void update() {
         for (int currentTab = 0; currentTab < tabs.size(); currentTab++) {
             Tab t = tabs.elementAt(currentTab);
-            // De-activate all the tabs except the currently active one
-            if (currentTab != activeTab)
-                t.activated = false;
 
             // if there is no activeDrawable, check if we should change activeTab
             if (activeDrawable == null && p.mousePressed && t.isOver(p.mouseX, p.mouseY)) {
-                t.activated = true;
                 activeTab = currentTab;
             }
 
@@ -172,7 +166,7 @@ public class TabManager implements Drawable {
             p.strokeWeight(0);
             p.textSize(charDimension);
             p.textAlign(PConstants.LEFT, PConstants.TOP);
-            p.fill(t.activated ? 200 : 255);
+            p.fill(i == activeTab ? 200 : 255);
             p.rect(t.pos.x, t.pos.y, t.size.x, t.size.y);
             p.fill(100);
             p.text(t.name, t.pos.x + 10, t.pos.y);
