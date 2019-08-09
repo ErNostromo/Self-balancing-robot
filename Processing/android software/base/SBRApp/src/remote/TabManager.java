@@ -107,7 +107,7 @@ public class TabManager implements Drawable {
             Tab t = tabs.elementAt(currentTab);
             if (currentTab != activeTab)
                 t.activated = false;
-            if (p.mousePressed && t.isOver(p.mouseX, p.mouseY)) {
+            if (activeDrawable == null && p.mousePressed && t.isOver(p.mouseX, p.mouseY)) {
                 t.activated = true;
                 activeTab = currentTab;
             }
