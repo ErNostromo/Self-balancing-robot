@@ -20,6 +20,8 @@ public class MainTester extends PApplet {
     }
 
     public void setup() {
+        frameRate(60);
+
         t = new TabManager(this);
         t.addTab("Tab1");
         t.addTab("Tabbbb2");
