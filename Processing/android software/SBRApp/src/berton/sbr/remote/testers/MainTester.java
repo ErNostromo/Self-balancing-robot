@@ -92,12 +92,16 @@ public class MainTester extends PApplet {
         t.update();
         t.updateDraw();
 
-        if (connectBtn.onActivated() && !connectedLed.activated && !waitingToConnect) {
-            time = System.currentTimeMillis();
-            waitingToConnect = true;
+        if (connectBtn.onActivated()) {
+            if (!connectedLed.activated && !waitingToConnect) {
+                time = System.currentTimeMillis();
+                waitingToConnect = true;
+            }
         }
         if (waitingToConnect && System.currentTimeMillis() > time + delayToConnect) {
+            waitingToConnect = false;
             connectedLed.activated = true;
+            kpSlider.setValue(4);
         }
         if (disconnectBtn.onActivated())
             connectedLed.activated = waitingToConnect = false;
