@@ -55,8 +55,4 @@ public class MainTester extends PApplet {
         l1.activated = b1.isTriggered();
         l2.activated = c2.isTriggered();
     }
-
-    public void mousePressed() {
-        // System.out.println(mouseX + ", " + mouseY);
-    }
 }
