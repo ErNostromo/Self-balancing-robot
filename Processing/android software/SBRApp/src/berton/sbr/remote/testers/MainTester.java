@@ -5,11 +5,10 @@ import berton.sbr.remote.drawables.*;
 
 public class MainTester extends PApplet {
     private TabManager t;
-    private Joystick j;
-    private Slider s1, s2;
-    private CheckBox c1, c2;
-    private Button b1, b2;
-    private Led l1, l2;
+    private Joystick joystick;
+    private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
+    private Button connectBtn, disconnectBtn, sendBtn;
+    private Led connectedLed;
 
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.testers.MainTester");
@@ -21,32 +20,65 @@ public class MainTester extends PApplet {
 
     public void setup() {
         frameRate(60);
-
+        kpSlider = new Slider(this);
         t = new TabManager(this);
-        t.addTab("Tab1");
-        t.addTab("Tabbbb2");
-        t.addTab("Tababababa     3");
-        t.addTab("aaaaaaaaaaaaaaaaaaaaaaa");
+        t.addTab("Remote");
+        t.addTab("Settings");
 
-        j = new Joystick(this, width / 2, height - 200, 100, 20);
-        s1 = new Slider(this, 75, 100, 100, 30);
-        s2 = new Slider(this, 270 - 75, 100, 100, 30);
-        b1 = new Button(this, 75, 150, "Pulsante 1", 16);
-        b2 = new Button(this, 270 - 75, 150, "Pulsante 2", 20);
-        c1 = new CheckBox(this, 75, 200, 50);
-        c2 = new CheckBox(this, 270 - 75, 200, 50);
-        l1 = new Led(this, 50, 510, 70);
-        l2 = new Led(this, 220, 510, 70);
+        joystick = new Joystick(this, width / 2, height - 200, 100, 20);
+        connectBtn = new Button(this, 50, 60, "Connect", 16);
+        disconnectBtn = new Button(this, 140, connectBtn.pos.y, "Disconnect", 16);
+        connectedLed = new Led(this, 230, connectBtn.pos.y, 40);
+        cameraSlider = new Slider(this, 110, 130, 200, 30);
 
-        t.insertDrawable(j, 0);
-        t.insertDrawable(s1, 0);
-        t.insertDrawable(s2, 0);
-        t.insertDrawable(b1, 0);
-        t.insertDrawable(b2, 0);
-        t.insertDrawable(c1, 0);
-        t.insertDrawable(c2, 0);
-        t.insertDrawable(l1, 0);
-        t.insertDrawable(l2, 0);
+        kpSlider = new Slider(this, cameraSlider.sliderPos.x, cameraSlider.sliderPos.y, cameraSlider.sliderSize.x,
+                cameraSlider.sliderSize.y);
+        kiSlider = new Slider(this, cameraSlider.sliderPos.x, kpSlider.sliderPos.y + kpSlider.sliderSize.y + 30,
+                cameraSlider.sliderSize.x, cameraSlider.sliderSize.y);
+        kdSlider = new Slider(this, cameraSlider.sliderPos.x, kiSlider.sliderPos.y + kpSlider.sliderSize.y + 30,
+                cameraSlider.sliderSize.x, cameraSlider.sliderSize.y);
+        setpointSlider = new Slider(this, cameraSlider.sliderPos.x, kdSlider.sliderPos.y + kpSlider.sliderSize.y + 30,
+                cameraSlider.sliderSize.x, cameraSlider.sliderSize.y);
+        turnSpeedSlider = new Slider(this, cameraSlider.sliderPos.x,
+                setpointSlider.sliderPos.y + kpSlider.sliderSize.y + 30, cameraSlider.sliderSize.x,
+                cameraSlider.sliderSize.y);
+        sendBtn = new Button(this, width / 2, height - 100, "Send", 18);
+
+        cameraSlider.setTitle("Camera");
+        cameraSlider.minValue = 0;
+        cameraSlider.maxValue = 180;
+        kpSlider.setTitle("Kp");
+        kpSlider.minValue = 0;
+        kpSlider.maxValue = 10;
+        kiSlider.setTitle("Ki");
+        kiSlider.minValue = 0;
+        kiSlider.maxValue = 10;
+        kdSlider.setTitle("Kd");
+        kdSlider.minValue = 0;
+        kdSlider.maxValue = 10;
+        setpointSlider.setTitle("Setpoint");
+        setpointSlider.minValue = 0;
+        setpointSlider.maxValue = 10;
+        turnSpeedSlider.setTitle("Turning speed");
+        turnSpeedSlider.minValue = 0;
+        turnSpeedSlider.maxValue = 10;
+        sendBtn.size.x += 40;
+
+        t.insertDrawable(joystick, 0);
+        t.insertDrawable(cameraSlider, 0);
+        t.insertDrawable(connectBtn, 0);
+        t.insertDrawable(disconnectBtn, 0);
+        t.insertDrawable(connectedLed, 0);
+
+        t.insertDrawable(connectBtn, 1);
+        t.insertDrawable(connectedLed, 1);
+        t.insertDrawable(disconnectBtn, 1);
+        t.insertDrawable(kpSlider, 1);
+        t.insertDrawable(kiSlider, 1);
+        t.insertDrawable(kdSlider, 1);
+        t.insertDrawable(setpointSlider, 1);
+        t.insertDrawable(turnSpeedSlider, 1);
+        t.insertDrawable(sendBtn, 1);
     }
 
     public void draw() {
@@ -54,7 +86,10 @@ public class MainTester extends PApplet {
         t.update();
         t.updateDraw();
 
-        l1.activated = b1.isTriggered();
-        l2.activated = c2.isTriggered();
+        connectedLed.activated = connectBtn.isTriggered();
+    }
+
+    public void mousePressed() {
+        // System.out.println(mouseX + ", " + mouseY);
     }
 }

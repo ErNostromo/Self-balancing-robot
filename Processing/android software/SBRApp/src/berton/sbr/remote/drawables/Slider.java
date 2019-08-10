@@ -6,10 +6,12 @@ public class Slider implements InputDrawable {
     private PApplet p;
     private boolean following;
     private float cursorMinLimit, cursorMaxLimit;
+    private String title;
 
     public PVector sliderPos, sliderSize, cursorAbsolutePos, cursorSize;
     public float minValue, maxValue;
     public int cursorDefaultColor, sliderColor, cursorActivatedColor;
+    public int textSize;
 
     private void setup(PApplet main, float x, float y, float sliderW, float sliderH) {
         p = main;
@@ -26,6 +28,8 @@ public class Slider implements InputDrawable {
         cursorDefaultColor = 200;
         cursorActivatedColor = 100;
         sliderColor = 255;
+        textSize = 16;
+        title = "";
     }
 
     public Slider(PApplet main) {
@@ -75,11 +79,21 @@ public class Slider implements InputDrawable {
     }
 
     public float getValue() {
-        return Math.round(p.map(cursorAbsolutePos.x, cursorMinLimit, cursorMaxLimit, minValue, maxValue));
+        return p.map(cursorAbsolutePos.x, cursorMinLimit, cursorMaxLimit, minValue, maxValue);
+    }
+
+    public void setTitle(String name) {
+        title = name;
     }
 
     @Override
     public void updateDraw() {
+        p.textSize(textSize);
+        p.textAlign(PConstants.LEFT, PConstants.CENTER);
+        p.fill(0);
+        p.text(title, sliderPos.x - sliderSize.x / 2, sliderPos.y - sliderSize.y / 2 - 20);
+        p.text(String.format("%.2f", getValue()), sliderPos.x + sliderSize.x / 2 + 10, sliderPos.y);
+
         p.rectMode(PConstants.CENTER);
         p.fill(sliderColor);
         p.stroke(0);
