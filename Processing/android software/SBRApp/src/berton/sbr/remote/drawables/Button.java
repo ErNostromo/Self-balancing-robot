@@ -7,6 +7,7 @@ public class Button implements InputDrawable {
     protected int state;
     protected boolean activated;
     protected boolean triggered;
+    protected boolean onActivated;
 
     public String name;
     public PVector pos, size;
@@ -23,6 +24,7 @@ public class Button implements InputDrawable {
         state = 0;
         textSize = 16;
         name = "";
+        onActivated = false;
     }
 
     /**
@@ -88,8 +90,10 @@ public class Button implements InputDrawable {
             activated = true;
             triggered = false;
             if (isOver(p.mouseX, p.mouseY)) {
-                if (!p.mousePressed)
+                if (!p.mousePressed) {
                     ++state;
+                    onActivated = true;
+                }
             } else
                 --state;
             break;
@@ -103,8 +107,10 @@ public class Button implements InputDrawable {
             activated = true;
             triggered = true;
             if (isOver(p.mouseX, p.mouseY)) {
-                if (!p.mousePressed)
+                if (!p.mousePressed) {
                     ++state;
+                    onActivated = true;
+                }
             } else
                 --state;
             break;
@@ -144,5 +150,13 @@ public class Button implements InputDrawable {
     @Override
     public boolean isBeingUsed() {
         return activated;
+    }
+
+    public boolean onActivated() {
+        if (onActivated) {
+            onActivated = false;
+            return true;
+        }
+        return false;
     }
 }
