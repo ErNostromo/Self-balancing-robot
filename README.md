@@ -1,6 +1,6 @@
 # Arduino Self Balancing Robot
 
-This repository is used by me, ErNostromo, to keep track of all the files i need for my maturity project: an Arduino self balancing robot. If you found this repository randomly, feel free to download and use the softwares included in the project.
+This repository is used by me, to keep track of all the files i need for my maturity project: an Arduino self balancing robot. If you found this repository randomly, feel free to download and use the softwares included in the project.
 
 ## Content of the folders
 - "./Arduino software/". Contains the main firmware (stable and unstable) and several other arduino sketches used to test different parts of the robot (motor drivers, gyroscope, servo, ultrasounds, etc.). The board used in my case is an Arduino ("ripoff") Pro Micro.
