@@ -79,7 +79,7 @@ public class Slider implements InputDrawable {
     }
 
     public float getValue() {
-        return p.map(cursorAbsolutePos.x, cursorMinLimit, cursorMaxLimit, minValue, maxValue);
+        return PApplet.map(cursorAbsolutePos.x, cursorMinLimit, cursorMaxLimit, minValue, maxValue);
     }
 
     public void setValue(float val) {
