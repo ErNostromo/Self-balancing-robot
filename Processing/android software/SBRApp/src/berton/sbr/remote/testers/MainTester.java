@@ -4,13 +4,20 @@ import processing.core.PApplet;
 import berton.sbr.remote.drawables.*;
 
 public class MainTester extends PApplet {
-    private TabManager t;
+    private TabManager tabManager;
     private Joystick joystick;
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Button connectBtn, disconnectBtn, sendBtn;
     private Led connectedLed;
 
-    ///Simulation like settings
+    //Diagnostics
+    private long start;
+    private int sum = 0;
+    private float avg;
+    private static final int nSamples = 60;
+    private int count = 0;
+
+    //Simulation like settings
     private long time;
     private static final int delayToConnect = 1000;
 
@@ -25,9 +32,9 @@ public class MainTester extends PApplet {
     public void setup() {
         frameRate(60);
         kpSlider = new Slider(this);
-        t = new TabManager(this);
-        t.addTab("Remote");
-        t.addTab("Settings");
+        tabManager = new TabManager(this);
+        tabManager.addTab("Remote");
+        tabManager.addTab("Settings");
 
         joystick = new Joystick(this, width / 2, height - 200, 100, 20);
         connectBtn = new Button(this, 50, 60, "Connect", 16);
@@ -68,29 +75,31 @@ public class MainTester extends PApplet {
         turnSpeedSlider.maxValue = 10;
         sendBtn.size.x += 40;
 
-        t.insertDrawable(joystick, 0);
-        t.insertDrawable(cameraSlider, 0);
-        t.insertDrawable(connectBtn, 0);
-        t.insertDrawable(disconnectBtn, 0);
-        t.insertDrawable(connectedLed, 0);
+        tabManager.insertDrawable(joystick, 0);
+        tabManager.insertDrawable(cameraSlider, 0);
+        tabManager.insertDrawable(connectBtn, 0);
+        tabManager.insertDrawable(disconnectBtn, 0);
+        tabManager.insertDrawable(connectedLed, 0);
 
-        t.insertDrawable(connectBtn, 1);
-        t.insertDrawable(connectedLed, 1);
-        t.insertDrawable(disconnectBtn, 1);
-        t.insertDrawable(kpSlider, 1);
-        t.insertDrawable(kiSlider, 1);
-        t.insertDrawable(kdSlider, 1);
-        t.insertDrawable(setpointSlider, 1);
-        t.insertDrawable(turnSpeedSlider, 1);
-        t.insertDrawable(sendBtn, 1);
+        tabManager.insertDrawable(connectBtn, 1);
+        tabManager.insertDrawable(connectedLed, 1);
+        tabManager.insertDrawable(disconnectBtn, 1);
+        tabManager.insertDrawable(kpSlider, 1);
+        tabManager.insertDrawable(kiSlider, 1);
+        tabManager.insertDrawable(kdSlider, 1);
+        tabManager.insertDrawable(setpointSlider, 1);
+        tabManager.insertDrawable(turnSpeedSlider, 1);
+        tabManager.insertDrawable(sendBtn, 1);
+
+        start = System.currentTimeMillis();
     }
 
     boolean waitingToConnect = false;
 
     public void draw() {
         background(160);
-        t.update();
-        t.updateDraw();
+        tabManager.update();
+        tabManager.updateDraw();
 
         if (connectBtn.onActivated()) {
             if (!connectedLed.activated && !waitingToConnect) {
@@ -110,6 +119,14 @@ public class MainTester extends PApplet {
             System.out.println("Send");
         }
 
+        count++;
+        sum += System.currentTimeMillis() - start;
+        if (count >= nSamples) {
+            avg = (float) sum / count;
+            count = sum = 0;
+            System.out.print("\r" + avg + " ms                 ");
+        }
+        start = System.currentTimeMillis();
     }
 
     public void mousePressed() {
