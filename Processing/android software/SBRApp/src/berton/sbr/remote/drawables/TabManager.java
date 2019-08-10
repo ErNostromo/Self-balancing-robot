@@ -168,7 +168,7 @@ public class TabManager implements Drawable {
             p.textAlign(PConstants.LEFT, PConstants.TOP);
             p.fill(i == activeTab ? 200 : 255);
             p.rect(t.pos.x, t.pos.y, t.size.x, t.size.y);
-            p.fill(100);
+            p.fill(0);
             p.text(t.name, t.pos.x + 10, t.pos.y);
             if (i == activeTab)
                 for (int j = 0; j < t.drawables.size(); j++) {
