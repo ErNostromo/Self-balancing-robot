@@ -10,6 +10,10 @@ public class MainTester extends PApplet {
     private Button connectBtn, disconnectBtn, sendBtn;
     private Led connectedLed;
 
+    ///Simulation like settings
+    private long time;
+    private static final int delayToConnect = 1000;
+
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.testers.MainTester");
     }
@@ -81,12 +85,27 @@ public class MainTester extends PApplet {
         t.insertDrawable(sendBtn, 1);
     }
 
+    boolean waitingToConnect = false;
+
     public void draw() {
-        background(127);
+        background(160);
         t.update();
         t.updateDraw();
 
-        connectedLed.activated = connectBtn.isTriggered();
+        if (connectBtn.onActivated() && !connectedLed.activated && !waitingToConnect) {
+            time = System.currentTimeMillis();
+            waitingToConnect = true;
+        }
+        if (waitingToConnect && System.currentTimeMillis() > time + delayToConnect) {
+            connectedLed.activated = true;
+        }
+        if (disconnectBtn.onActivated())
+            connectedLed.activated = waitingToConnect = false;
+
+        if (sendBtn.onActivated()) {
+            System.out.println("Send");
+        }
+
     }
 
     public void mousePressed() {
