@@ -116,7 +116,7 @@ public class Joystick implements InputDrawable {
      * @return the value.
      */
     public int getYPower() {
-        return Math.round(p.map(-cursorRelativePosition.y, -R, R, minYValue, maxYValue));
+        return Math.round(PApplet.map(-cursorRelativePosition.y, -R, R, minYValue, maxYValue));
     }
 
     /**
@@ -124,7 +124,7 @@ public class Joystick implements InputDrawable {
      * @return the value.
      */
     public int getXPower() {
-        return Math.round(p.map(-cursorRelativePosition.y, -R, R, minXValue, maxXValue));
+        return Math.round(PApplet.map(-cursorRelativePosition.y, -R, R, minXValue, maxXValue));
     }
 
     @Override
