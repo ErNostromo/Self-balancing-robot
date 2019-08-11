@@ -67,6 +67,8 @@ public class TabManager implements Drawable {
      * @param tabName the name of the new Tab
      */
     public void addTab(String tabName) {
+        if (tabName == null || tabName.equals(""))
+            return;
         // Set the correct row
         p.textSize(charDimension);
         if (nextX + p.textWidth(tabName) + 20 > p.width) {

@@ -87,6 +87,8 @@ public class Slider implements InputDrawable {
     }
 
     public void setTitle(String name) {
+        if (name == null || name.equals(""))
+            return;
         title = name;
     }
 

@@ -20,6 +20,7 @@ public class MainTester extends PApplet {
     //Simulation like settings
     private long time;
     private static final int delayToConnect = 1000;
+    private boolean waitingToConnect = false;
 
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.testers.MainTester");
@@ -97,8 +98,6 @@ public class MainTester extends PApplet {
 
         start = System.currentTimeMillis();
     }
-
-    boolean waitingToConnect = false;
 
     public void draw() {
         background(160);
