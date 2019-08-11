@@ -35,7 +35,6 @@ public class MainTester extends PApplet {
         tabManager = new TabManager(this);
         tabManager.addTab("Remote");
         tabManager.addTab("Settings");
-        tabManager.addTab("NewFeatureTab");
 
         joystick = new Joystick(this, width / 2, height - 200, 100, 20);
         connectBtn = new Button(this, 50, 60, "Connect", 16);
