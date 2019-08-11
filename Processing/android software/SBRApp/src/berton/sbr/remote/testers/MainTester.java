@@ -35,6 +35,7 @@ public class MainTester extends PApplet {
         tabManager = new TabManager(this);
         tabManager.addTab("Remote");
         tabManager.addTab("Settings");
+        tabManager.addTab("NewFeatureTab");
 
         joystick = new Joystick(this, width / 2, height - 200, 100, 20);
         connectBtn = new Button(this, 50, 60, "Connect", 16);
@@ -90,6 +91,10 @@ public class MainTester extends PApplet {
         tabManager.insertDrawable(setpointSlider, 1);
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendBtn, 1);
+
+        tabManager.insertDrawable(connectBtn, 2);
+        tabManager.insertDrawable(disconnectBtn, 2);
+        tabManager.insertDrawable(connectedLed, 2);
 
         start = System.currentTimeMillis();
     }
