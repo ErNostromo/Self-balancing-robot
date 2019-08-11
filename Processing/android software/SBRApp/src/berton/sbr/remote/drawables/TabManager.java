@@ -178,6 +178,8 @@ public class TabManager implements Drawable {
             // fill the spaces left from the tabs
             if (i >= tabs.size() - 1 || tabs.elementAt(i + 1).pos.y > t.pos.y) {
                 p.fill(240);
+                p.stroke(0);
+                p.strokeWeight(0);
                 p.rectMode(PConstants.CORNERS);
                 p.rect(t.pos.x + t.size.x, t.pos.y, p.width, t.pos.y + t.size.y);
             }
