@@ -92,10 +92,6 @@ public class MainTester extends PApplet {
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendBtn, 1);
 
-        tabManager.insertDrawable(connectBtn, 2);
-        tabManager.insertDrawable(disconnectBtn, 2);
-        tabManager.insertDrawable(connectedLed, 2);
-
         start = System.currentTimeMillis();
     }
 
