@@ -3,5 +3,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
-	<classpathentry kind="lib" path="/usr/share/processing/core/library/core.jar"/>
+	<classpathentry kind="lib" path="lib/core.jar"/>
+	<classpathentry kind="lib" path="lib/bluecove-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/bluecove-gpl-2.1.0.jar"/>
 </classpath>
