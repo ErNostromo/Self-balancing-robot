@@ -3,7 +3,7 @@ package berton.sbr.remote.testers;
 import processing.core.PApplet;
 import berton.sbr.remote.drawables.*;
 
-public class MainTester extends PApplet {
+public class AndroidBase extends PApplet {
     private TabManager tabManager;
     private Joystick joystick;
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
