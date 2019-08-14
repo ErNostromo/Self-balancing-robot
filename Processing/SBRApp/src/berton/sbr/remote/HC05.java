@@ -118,4 +118,8 @@ public class HC05 {
         }
         return "";
     }
+
+    public boolean isConnected() {
+        return (device != null);
+    }
 }
