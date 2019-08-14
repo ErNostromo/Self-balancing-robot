@@ -18,9 +18,9 @@ import javax.microedition.io.StreamConnection;
 public class BTTester {
     private boolean scanFinished = false;
     private RemoteDevice hc05device;
-    private static final String P20MAC = "0C2C54245E3B";
-    private static final String HC05MAC = "";
-    String macToConnectTo = P20MAC;
+    private static final String HC05MAC = "00211303D07A"; // set to null to enable discovery through name
+    String macToConnectTo = HC05MAC;
+    // set to null if not sure about the url
     String urlToConnectTo = "btspp://" + macToConnectTo + ":1;authenticate=false;encrypt=false;master=false";
 
     public static void main(String[] args) {
@@ -42,9 +42,11 @@ public class BTTester {
                     String name = btDevice.getFriendlyName(false);
                     System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
                     // if (name.matches("HC.*")) {
-                    if (btDevice.getBluetoothAddress().equals(macToConnectTo)) {
+                    if (macToConnectTo == null ? name.matches("HC.*")
+                            : btDevice.getBluetoothAddress().equals(macToConnectTo)) {
                         hc05device = btDevice;
                         System.out.println("Connected");
+                        scanFinished = true;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -69,43 +71,45 @@ public class BTTester {
             Thread.sleep(500);
         }
 
-        //search for services:
-        UUID uuid = new UUID(0x1101); //scan for btspp://... services (as HC-05 offers it)
-        UUID[] searchUuidSet = new UUID[] { uuid };
-        int[] attrIDs = new int[] { 0x0100 // service nameew BTTester().
-        };
-        scanFinished = false;
-        LocalDevice.getLocalDevice().getDiscoveryAgent().searchServices(attrIDs, searchUuidSet, hc05device,
-                new DiscoveryListener() {
-                    @Override
-                    public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
-                    }
+        if (urlToConnectTo == null) { // only if we are not sure about the url
+            //search for services:
+            UUID uuid = new UUID(0x1101); //scan for btspp://... services (as HC-05 offers it)
+            UUID[] searchUuidSet = new UUID[] { uuid };
+            int[] attrIDs = new int[] { 0x0100 // service nameew BTTester().
+            };
+            scanFinished = false;
+            System.out.println("Scanning services...");
+            LocalDevice.getLocalDevice().getDiscoveryAgent().searchServices(attrIDs, searchUuidSet, hc05device,
+                    new DiscoveryListener() {
+                        @Override
+                        public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
+                        }
 
-                    @Override
-                    public void inquiryCompleted(int discType) {
-                    }
+                        @Override
+                        public void inquiryCompleted(int discType) {
+                        }
 
-                    @Override
-                    public void serviceSearchCompleted(int transID, int respCode) {
-                        scanFinished = true;
-                    }
+                        @Override
+                        public void serviceSearchCompleted(int transID, int respCode) {
+                            scanFinished = true;
+                        }
 
-                    @Override
-                    public void servicesDiscovered(int transID, ServiceRecord[] servRecord) {
-                        for (int i = 0; i < servRecord.length; i++) {
-                            urlToConnectTo = servRecord[i].getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT,
-                                    false);
-                            if (urlToConnectTo != null) {
-                                break; //take the first one
+                        @Override
+                        public void servicesDiscovered(int transID, ServiceRecord[] servRecord) {
+                            for (int i = 0; i < servRecord.length; i++) {
+                                urlToConnectTo = servRecord[i].getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT,
+                                        false);
+                                if (urlToConnectTo != null) {
+                                    break; //take the first one
+                                }
                             }
                         }
-                    }
-                });
+                    });
 
-        while (!scanFinished) {
-            Thread.sleep(500);
+            while (!scanFinished) {
+                Thread.sleep(500);
+            }
         }
-
         System.out.println(hc05device.getBluetoothAddress());
         System.out.println(urlToConnectTo);
 
@@ -114,7 +118,23 @@ public class BTTester {
         OutputStream os = streamConnection.openOutputStream();
         InputStream is = streamConnection.openInputStream();
 
-        os.write("1".getBytes()); //just send '1' to the device
+        // os.write("1".getBytes()); //just send '1' to the device
+        long time = System.currentTimeMillis();
+        String recv = "";
+        char ch = '\0';
+        while (System.currentTimeMillis() < time + 5000) {
+            if (is.available() > 0) {
+                ch = (char) is.read();
+                if (ch == '\n')
+                    ch = '\0';
+                recv += ch;
+            }
+            if (ch == ';') {
+                System.out.print("\r" + recv);
+                recv = "";
+                ch = '\0';
+            }
+        }
         os.close();
         is.close();
     }
