@@ -115,6 +115,15 @@ public class TabManager implements Drawable {
     }
 
     /**
+     * Get the y position of the last tab (to know where to start drawing drawables)
+     * @return the y position of the last tab
+     */
+    public float getLastY() {
+        Tab tab = tabs.get(tabs.size() - 1);
+        return tab.pos.y + tab.size.y;
+    }
+
+    /**
      * Get the currently active tab; if the Drawable-s stored are NOT InputDrawable-s,
      * update them; otherwise get the activeDrawable (using isBeingUsed()) and update it.
      */
