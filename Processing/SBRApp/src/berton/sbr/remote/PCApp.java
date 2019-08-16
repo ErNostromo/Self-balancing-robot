@@ -2,8 +2,6 @@ package berton.sbr.remote;
 
 import processing.core.PApplet;
 
-import java.io.IOException;
-
 import berton.sbr.remote.drawables.*;
 
 public class PCApp extends PApplet {
