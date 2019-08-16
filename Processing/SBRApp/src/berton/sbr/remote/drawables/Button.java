@@ -136,9 +136,15 @@ public class Button implements InputDrawable {
     @Override
     public void updateDraw() {
         p.rectMode(PConstants.CENTER);
-        p.fill(activated ? buttonActivatedColor : buttonDefaultColor);
         p.stroke(0);
         p.strokeWeight(1);
+        p.fill(buttonDefaultColor);
+        if (isOver(p.mouseX, p.mouseY)) {
+            p.fill(buttonDefaultColor - 50);
+            p.strokeWeight(2);
+        }
+        if (activated)
+            p.fill(buttonActivatedColor);
         p.rect(pos.x, pos.y, size.x, size.y);
         p.textAlign(PConstants.CENTER, PConstants.CENTER);
 
