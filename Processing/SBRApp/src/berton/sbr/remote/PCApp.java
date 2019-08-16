@@ -11,6 +11,13 @@ public class PCApp extends PApplet {
     private Button connectButton;
     private Button disconnectButton;
 
+    // Diagnostics
+    private long time;
+    private static final int samples = 100;
+    private int count;
+    private int sum;
+    private float avg;
+
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.PCApp");
     }
@@ -20,10 +27,13 @@ public class PCApp extends PApplet {
     }
 
     public void setup() {
+        frameRate(9999); // The fastest, the better
         hc05 = new HC05();
         connectButton = new Button(this, 100, 50, "CONNECT", 30);
         disconnectButton = new Button(this, connectButton.pos.x + connectButton.size.x + 50, connectButton.pos.y,
                 "DISCONNECT", 30);
+
+        time = System.currentTimeMillis();
     }
 
     public void draw() {
@@ -60,5 +70,14 @@ public class PCApp extends PApplet {
                 e.printStackTrace();
             }
         }
+
+        sum += System.currentTimeMillis() - time;
+        count++;
+        if (count >= samples) {
+            avg = sum / (float) samples;
+            System.out.println("\r\n" + avg + "ms");
+            sum = count = 0;
+        }
+        time = System.currentTimeMillis();
     }
 }
