@@ -17,6 +17,7 @@ public class Joystick implements InputDrawable {
     public int joystickColor, cursorDefaultColor, cursorPushedColor;
     public int minYValue, maxYValue, minXValue, maxXValue;
     public PVector joystickCenter;
+    public int textSize;
 
     private void setup(PApplet main, float jx, float jy, float joystickRadius, float cursorRadius) {
         p = main;
@@ -34,6 +35,7 @@ public class Joystick implements InputDrawable {
         cursorDefaultColor = 200;
         cursorPushedColor = 100;
         following = false;
+        textSize = 16;
     }
 
     /**
@@ -124,7 +126,7 @@ public class Joystick implements InputDrawable {
      * @return the value.
      */
     public int getXPower() {
-        return Math.round(PApplet.map(-cursorRelativePosition.y, -R, R, minXValue, maxXValue));
+        return Math.round(PApplet.map(cursorRelativePosition.x, -R, R, minXValue, maxXValue));
     }
 
     @Override
@@ -136,6 +138,11 @@ public class Joystick implements InputDrawable {
         p.ellipse(joystickCenter.x, joystickCenter.y, R, R);
         p.fill(isFollowing() ? cursorPushedColor : cursorDefaultColor);
         p.ellipse(getCursorAbsPosition().x, getCursorAbsPosition().y, r, r);
+
+        p.textSize(16);
+        p.textAlign(PConstants.CENTER, PConstants.TOP);
+        p.fill(0);
+        p.text(getXPower() + ", " + getYPower(), joystickCenter.x, joystickCenter.y + R / 2 + 20);
     }
 
     @Override
