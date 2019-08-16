@@ -6,8 +6,11 @@ import berton.sbr.remote.drawables.*;
 
 public class PCApp extends PApplet {
     private HC05 hc05;
+    private TabManager tabManager;
     private Button connectButton;
     private Button disconnectButton;
+    private TextBoxDisplay texts;
+    private Joystick joystick;
 
     // Diagnostics
     private long time;
@@ -27,9 +30,25 @@ public class PCApp extends PApplet {
     public void setup() {
         frameRate(9999); // The fastest, the better
         hc05 = new HC05();
-        connectButton = new Button(this, 100, 50, "CONNECT", 30);
+        tabManager = new TabManager(this);
+        tabManager.charDimension = 20;
+        tabManager.addTab("Remote");
+        tabManager.addTab("Settings");
+        connectButton = new Button(this, 100, 70, "CONNECT", 30);
         disconnectButton = new Button(this, connectButton.pos.x + connectButton.size.x + 50, connectButton.pos.y,
                 "DISCONNECT", 30);
+        texts = new TextBoxDisplay(this, width / 2, connectButton.pos.y - connectButton.size.y / 2, width / 2 - 20,
+                (height - tabManager.getLastY()) - 50);
+        texts.setMaxLines(30);
+        texts.insertLine("test");
+        joystick = new Joystick(this, 210, height / 2, 100, 20);
+        joystick.maxXValue = joystick.maxYValue = 8;
+        joystick.minXValue = joystick.minYValue = 0;
+
+        tabManager.insertDrawable(connectButton, 0);
+        tabManager.insertDrawable(disconnectButton, 0);
+        tabManager.insertDrawable(texts, 0);
+        tabManager.insertDrawable(joystick, 0);
 
         time = System.currentTimeMillis();
     }
@@ -37,10 +56,8 @@ public class PCApp extends PApplet {
     public void draw() {
         background(100);
 
-        connectButton.update();
-        disconnectButton.update();
-        connectButton.updateDraw();
-        disconnectButton.updateDraw();
+        tabManager.update();
+        tabManager.updateDraw();
 
         if (connectButton.onActivated() && !hc05.isConnected()) {
             try {
@@ -63,7 +80,10 @@ public class PCApp extends PApplet {
 
         if (hc05.isConnected()) {
             try {
-                System.out.print("\r" + hc05.getStringFromHC05());
+                String recv = hc05.getStringFromHC05();
+                texts.insertLine(recv);
+
+                hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -77,5 +97,9 @@ public class PCApp extends PApplet {
             sum = count = 0;
         }
         time = System.currentTimeMillis();
+    }
+
+    public void mousePressed() {
+        // System.out.println(mouseX + ", " + mouseY);
     }
 }
