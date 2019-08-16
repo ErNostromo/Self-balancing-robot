@@ -55,10 +55,15 @@ public class HC05 {
             @Override
             public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
                 try {
-                    String name = btDevice.getFriendlyName(false);
-                    System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
-                    // if (name.matches("HC.*")) {
-                    if (mac == null ? name.matches("HC.*") : btDevice.getBluetoothAddress().equals(mac)) {
+                    if (mac == null) {
+                        String name = btDevice.getFriendlyName(false);
+                        System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
+                        if (name.matches("HC.*")) {
+                            device = btDevice;
+                            scanFinished = true;
+                            return;
+                        }
+                    } else if (btDevice.getBluetoothAddress().equals(mac)) {
                         device = btDevice;
                         scanFinished = true;
                         return;
@@ -125,6 +130,12 @@ public class HC05 {
             return recvString;
         }
         return "";
+    }
+
+    public void sendString(String text) throws IOException {
+        if (device != null) {
+            os.write(text.getBytes());
+        }
     }
 
     public boolean isConnected() {
