@@ -18,6 +18,7 @@ public class HC05 {
     private static final String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
     private boolean scanFinished;
     private static RemoteDevice device;
+    private StreamConnection s;
     private OutputStream os;
     private InputStream is;
 
@@ -38,6 +39,7 @@ public class HC05 {
 
     private void setup() {
         device = null;
+        s = null;
         is = null;
         os = null;
         scanFinished = false;
@@ -84,7 +86,7 @@ public class HC05 {
             Thread.sleep(500);
 
         if (device != null) {
-            StreamConnection s = (StreamConnection) Connector.open(url);
+            s = (StreamConnection) Connector.open(url);
             is = s.openInputStream();
             os = s.openOutputStream();
         }
@@ -94,6 +96,7 @@ public class HC05 {
 
     public void disconnect() throws IOException {
         if (device != null) {
+            s.close();
             os.close();
             is.close();
         }
@@ -108,12 +111,17 @@ public class HC05 {
         while (is.available() == 0) {
         }
         if (is.available() > 0) {
+            // read the first recognizable string
             while (is.available() > 0 && ch != END_CH) {
                 ch = (char) is.read();
                 if (ch == '\n' || ch == '\r')
                     ch = '\0';
                 recvString += ch;
             }
+
+            // empty buffer
+            while (is.available() > 0)
+                is.read();
             return recvString;
         }
         return "";
