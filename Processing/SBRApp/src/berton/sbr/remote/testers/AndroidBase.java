@@ -23,7 +23,7 @@ public class AndroidBase extends PApplet {
     private boolean waitingToConnect = false;
 
     public static void main(String[] args) {
-        PApplet.main("berton.sbr.remote.testers.MainTester");
+        PApplet.main("berton.sbr.remote.testers.AndroidBase");
     }
 
     public void settings() {
