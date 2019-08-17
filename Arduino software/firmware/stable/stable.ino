@@ -6,7 +6,7 @@
 //https://github.com/jrowberg/i2cdevlib/blob/master/Arduino/MPU6050/MPU6050.cpp#L209
 
 #include "MPU6050.h"
-#include "I2Cdev.h"
+//#include "I2Cdev.h"
 #include "math.h"
 #include <EEPROM.h>
 #include <Servo.h>
