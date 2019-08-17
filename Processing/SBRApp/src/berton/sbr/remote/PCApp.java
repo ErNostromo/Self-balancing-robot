@@ -3,6 +3,7 @@ package berton.sbr.remote;
 import processing.core.PApplet;
 
 import berton.sbr.remote.drawables.*;
+import berton.sbr.HC05;
 
 public class PCApp extends PApplet {
     private HC05 hc05;
@@ -39,7 +40,7 @@ public class PCApp extends PApplet {
                 "DISCONNECT", 30);
         texts = new TextBoxDisplay(this, width / 2, connectButton.pos.y - connectButton.size.y / 2, width / 2 - 20,
                 (height - tabManager.getLastY()) - 50);
-        texts.setMaxLines(30);
+        texts.setMaxLines(20);
         texts.insertLine("test");
         joystick = new Joystick(this, 210, height / 2, 100, 20);
         joystick.maxXValue = joystick.maxYValue = 8;
@@ -101,5 +102,9 @@ public class PCApp extends PApplet {
 
     public void mousePressed() {
         // System.out.println(mouseX + ", " + mouseY);
+    }
+
+    public void keyPressed() {
+        System.out.println(key);
     }
 }
