@@ -17,6 +17,7 @@ import javax.microedition.io.Connector;
 public class HC05 extends Thread {
     private static final String mac = "00211303D07A";
     private static final String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
+
     private volatile String recvString;
     private volatile String bufferString;
     private volatile boolean scanFinished;
@@ -65,7 +66,7 @@ public class HC05 extends Thread {
 
     public void sendString(String text) {
         if (device != null && text != null) {
-            System.out.println("Sending " + text);
+            // System.out.println("Sending " + text);
             try {
                 os.write(text.getBytes());
             } catch (IOException e) {
