@@ -17,12 +17,7 @@ public class PCApp extends PApplet {
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Led connectedLed;
 
-    // Diagnostics
-    private long time;
-    private static final int samples = 100;
-    private int count;
-    private int sum;
-    private float avg;
+    private boolean onFirstReceived;
 
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.PCApp");
@@ -57,6 +52,7 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(connectedLed, 0);
         tabManager.insertDrawable(connectButton, 1);
         tabManager.insertDrawable(disconnectButton, 1);
+        tabManager.insertDrawable(connectedLed, 1);
         tabManager.insertDrawable(texts, 0);
         tabManager.insertDrawable(joystick, 0);
 
@@ -92,7 +88,7 @@ public class PCApp extends PApplet {
 
         hc05.start();
 
-        time = System.currentTimeMillis();
+        onFirstReceived = false;
     }
 
     public void draw() {
@@ -103,31 +99,20 @@ public class PCApp extends PApplet {
 
         connectedLed.activated = hc05.isConnected();
 
-        if (connectButton.onActivated() && !hc05.isConnected()) {
+        if (connectButton.onActivated()) {
             try {
                 hc05.connect();
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        if (hc05.onConnect()) {
-            while (!hc05.isConnected()) {
-            }
+        if (hc05.onConnect())
             texts.clear();
-            try {
-                Thread.sleep(100);
-                hc05.sendString("e");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         if (disconnectButton.onActivated()) {
             try {
                 hc05.disconnect();
-                System.out.println("Disconnected!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -137,7 +122,14 @@ public class PCApp extends PApplet {
             try {
                 String recv = hc05.getStringFromHC05();
                 if (!recv.equals("")) { // if we actually received data...
+                    if (texts.getNumberOfLines() <= 0)
+                        onFirstReceived = true;
                     texts.insertLine(recv);
+                }
+
+                if (onFirstReceived) {
+                    hc05.sendString("e");
+                    onFirstReceived = false;
                 }
 
                 if (recv.startsWith("e")) {
@@ -153,7 +145,7 @@ public class PCApp extends PApplet {
                 }
 
                 if (tabManager.activeTab == 0)
-                    //hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
+                    // hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
                     if (tabManager.activeTab == 1) {
                         if (sendButton.onActivated()) {
                             hc05.sendString(
@@ -164,17 +156,6 @@ public class PCApp extends PApplet {
                 e.printStackTrace();
             }
         }
-
-        sum += System.currentTimeMillis() - time;
-        count++;
-        if (count >= samples) {
-            avg = sum / (float) samples;
-            System.out.print("\r" + avg + "ms / ");
-            System.out.format("%.2f", 1000 / avg);
-            System.out.print(" fps");
-            sum = count = 0;
-        }
-        time = System.currentTimeMillis();
     }
 
     public void mousePressed() {
