@@ -115,7 +115,7 @@ public class HC05 {
         char ch = '\0';
         if (is.available() > 0) {
             // read the first recognizable string
-            while (is.available() > 0 && ch != END_CH) {
+            while (ch != END_CH) {
                 ch = (char) is.read();
                 if (ch == '\n' || ch == '\r')
                     ch = '\0';
