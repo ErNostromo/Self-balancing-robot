@@ -15,6 +15,7 @@ public class PCApp extends PApplet {
     private TextBoxDisplay texts;
     private Joystick joystick;
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
+    private Led connectedLed;
 
     // Diagnostics
     private long time;
@@ -32,15 +33,17 @@ public class PCApp extends PApplet {
     }
 
     public void setup() {
-        frameRate(9999); // The fastest, the better
+        frameRate(60);
         hc05 = new HC05();
         tabManager = new TabManager(this);
         tabManager.charDimension = 20;
         tabManager.addTab("Remote");
         tabManager.addTab("Settings");
-        connectButton = new Button(this, 100, 70, "CONNECT", 30);
+        connectButton = new Button(this, 100, 70, "CONNECT", 25);
         disconnectButton = new Button(this, connectButton.pos.x + connectButton.size.x + 50, connectButton.pos.y,
-                "DISCONNECT", 30);
+                "DISCONNECT", 25);
+        connectedLed = new Led(this, disconnectButton.pos.x + disconnectButton.size.x / 2 + 50, disconnectButton.pos.y,
+                50);
         texts = new TextBoxDisplay(this, width / 2, connectButton.pos.y - connectButton.size.y / 2, width / 2 - 20,
                 (height - tabManager.getLastY()) - 50);
         texts.setMaxLines(30);
@@ -51,6 +54,7 @@ public class PCApp extends PApplet {
 
         tabManager.insertDrawable(connectButton, 0);
         tabManager.insertDrawable(disconnectButton, 0);
+        tabManager.insertDrawable(connectedLed, 0);
         tabManager.insertDrawable(connectButton, 1);
         tabManager.insertDrawable(disconnectButton, 1);
         tabManager.insertDrawable(texts, 0);
@@ -86,6 +90,8 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
 
+        hc05.start();
+
         time = System.currentTimeMillis();
     }
 
@@ -95,23 +101,30 @@ public class PCApp extends PApplet {
         tabManager.update();
         tabManager.updateDraw();
 
+        connectedLed.activated = hc05.isConnected();
+
         if (connectButton.onActivated() && !hc05.isConnected()) {
             try {
-                if (hc05.connect()) {
-                    System.out.println("Connected!");
-                    texts.clear();
-                    try {
-                        hc05.sendString("e");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else
-                    System.out.println("Connection went wrong");
+                hc05.connect();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (disconnectButton.onActivated() && hc05.isConnected()) {
+
+        if (hc05.onConnect()) {
+            while (!hc05.isConnected()) {
+            }
+            texts.clear();
+            try {
+                Thread.sleep(100);
+                hc05.sendString("e");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (disconnectButton.onActivated()) {
             try {
                 hc05.disconnect();
                 System.out.println("Disconnected!");
@@ -140,13 +153,13 @@ public class PCApp extends PApplet {
                 }
 
                 if (tabManager.activeTab == 0)
-                    hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
-                if (tabManager.activeTab == 1) {
-                    if (sendButton.onActivated()) {
-                        hc05.sendString(
-                                "k" + kpSlider.getValue() + "," + kiSlider.getValue() + "," + kdSlider.getValue());
+                    //hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
+                    if (tabManager.activeTab == 1) {
+                        if (sendButton.onActivated()) {
+                            hc05.sendString(
+                                    "k" + kpSlider.getValue() + "," + kiSlider.getValue() + "," + kdSlider.getValue());
+                        }
                     }
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
