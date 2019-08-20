@@ -51,6 +51,10 @@ public class TextBoxDisplay implements Drawable {
         }
     }
 
+    public void clear() {
+        lines = new LinkedList<String>();
+    }
+
     @Override
     public void update() {
 
