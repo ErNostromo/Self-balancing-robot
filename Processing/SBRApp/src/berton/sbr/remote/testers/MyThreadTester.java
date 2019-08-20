@@ -5,7 +5,8 @@ public class MyThreadTester {
         System.out.println("MainThread started");
         MyThread t = new MyThread();
         t.start();
-        Thread.sleep(3000);
+        Thread.sleep(500);
+        t.quit();
         System.out.println("MainThread ended");
     }
 }
