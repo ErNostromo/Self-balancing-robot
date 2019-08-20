@@ -113,8 +113,6 @@ public class HC05 {
             return "Device is null";
         String recvString = "";
         char ch = '\0';
-        while (is.available() == 0) {
-        }
         if (is.available() > 0) {
             // read the first recognizable string
             while (is.available() > 0 && ch != END_CH) {
