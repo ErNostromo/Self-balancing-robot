@@ -103,8 +103,10 @@ public class PCApp extends PApplet {
             }
         }
 
-        if (hc05.onConnect())
+        if (hc05.onConnect()) {
+            System.out.println("onConnect");
             texts.clear();
+        }
 
         if (disconnectButton.onActivated()) {
             try {
@@ -136,13 +138,13 @@ public class PCApp extends PApplet {
                 }
 
                 if (tabManager.activeTab == 0)
-                    // hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
-                    if (tabManager.activeTab == 1) {
-                        if (sendButton.onActivated()) {
-                            hc05.sendString(
-                                    "k" + kpSlider.getValue() + "," + kiSlider.getValue() + "," + kdSlider.getValue());
-                        }
+                    hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
+                if (tabManager.activeTab == 1) {
+                    if (sendButton.onActivated()) {
+                        hc05.sendString(
+                                "k" + kpSlider.getValue() + "," + kiSlider.getValue() + "," + kdSlider.getValue());
                     }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
