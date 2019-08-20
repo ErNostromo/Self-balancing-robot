@@ -123,7 +123,9 @@ public class PCApp extends PApplet {
         if (hc05.isConnected()) {
             try {
                 String recv = hc05.getStringFromHC05();
-                texts.insertLine(recv);
+                if (!recv.equals("")) { // if we actually received data...
+                    texts.insertLine(recv);
+                }
 
                 if (recv.startsWith("e")) {
                     System.out.println("TROVATO: " + recv + "!!!");
