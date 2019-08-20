@@ -17,8 +17,6 @@ public class PCApp extends PApplet {
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Led connectedLed;
 
-    private boolean onFirstReceived;
-
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.PCApp");
     }
@@ -87,8 +85,6 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(sendButton, 1);
 
         hc05.start();
-
-        onFirstReceived = false;
     }
 
     public void draw() {
@@ -122,14 +118,9 @@ public class PCApp extends PApplet {
             try {
                 String recv = hc05.getStringFromHC05();
                 if (!recv.equals("")) { // if we actually received data...
-                    if (texts.getNumberOfLines() <= 0)
-                        onFirstReceived = true;
+                    if (texts.getNumberOfLines() == 1)
+                        hc05.sendString("e;");
                     texts.insertLine(recv);
-                }
-
-                if (onFirstReceived) {
-                    hc05.sendString("e");
-                    onFirstReceived = false;
                 }
 
                 if (recv.startsWith("e")) {
