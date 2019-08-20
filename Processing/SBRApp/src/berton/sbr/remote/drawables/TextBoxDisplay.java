@@ -81,4 +81,8 @@ public class TextBoxDisplay implements Drawable {
             count++;
         }
     }
+
+    public int getNumberOfLines() {
+        return lines.size();
+    }
 }
