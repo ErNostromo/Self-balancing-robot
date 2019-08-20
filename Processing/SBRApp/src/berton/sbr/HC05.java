@@ -18,6 +18,7 @@ public class HC05 extends Thread {
     private static final String mac = "00211303D07A";
     private static final String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
     private volatile String recvString;
+    private volatile String bufferString;
     private volatile boolean scanFinished;
     private volatile static RemoteDevice device;
     private volatile StreamConnection s;
@@ -32,6 +33,7 @@ public class HC05 extends Thread {
 
     private void setup() {
         recvString = "";
+        bufferString = "";
         toConnect = false;
         toDisconnect = false;
         onConnect = false;
@@ -61,9 +63,14 @@ public class HC05 extends Thread {
         return s;
     }
 
-    public void sendString(String text) throws IOException {
+    public void sendString(String text) {
         if (device != null && text != null) {
-            os.write(text.getBytes());
+            System.out.println("Sending " + text);
+            try {
+                os.write(text.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             System.out.println("Device: " + device + "; text: " + text);
         }
@@ -164,15 +171,16 @@ public class HC05 extends Thread {
                 try {
                     if (is.available() > 0) {
                         char ch = '\0';
-                        recvString = "";
+                        bufferString = "";
                         // read the first recognizable string
-                        while (is.available() > 0 && ch != END_CH) {
+                        while (ch != END_CH) {
                             ch = (char) is.read();
                             if (ch == '\n' || ch == '\r')
                                 ch = '\0';
-                            recvString += ch;
+                            bufferString += ch;
                         }
 
+                        recvString = bufferString.toString();
                         // empty buffer
                         while (is.available() > 0)
                             is.read();
