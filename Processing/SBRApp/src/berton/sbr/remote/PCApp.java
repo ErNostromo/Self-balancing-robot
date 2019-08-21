@@ -15,13 +15,7 @@ public class PCApp extends PApplet {
     private TextBoxDisplay texts;
     private Joystick joystick;
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
-
-    // Diagnostics
-    private long time;
-    private static final int samples = 100;
-    private int count;
-    private int sum;
-    private float avg;
+    private Led connectedLed;
 
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.PCApp");
@@ -32,27 +26,37 @@ public class PCApp extends PApplet {
     }
 
     public void setup() {
-        frameRate(9999); // The fastest, the better
+        frameRate(60);
         hc05 = new HC05();
         tabManager = new TabManager(this);
         tabManager.charDimension = 20;
         tabManager.addTab("Remote");
         tabManager.addTab("Settings");
-        connectButton = new Button(this, 100, 70, "CONNECT", 30);
+        connectButton = new Button(this, 100, 70, "CONNECT", 25);
         disconnectButton = new Button(this, connectButton.pos.x + connectButton.size.x + 50, connectButton.pos.y,
-                "DISCONNECT", 30);
+                "DISCONNECT", 25);
+        connectedLed = new Led(this, disconnectButton.pos.x + disconnectButton.size.x / 2 + 50, disconnectButton.pos.y,
+                50);
+        cameraSlider = new Slider(this, 200, connectButton.pos.y + connectButton.size.y / 2 + 70, 300, 50);
         texts = new TextBoxDisplay(this, width / 2, connectButton.pos.y - connectButton.size.y / 2, width / 2 - 20,
                 (height - tabManager.getLastY()) - 50);
         texts.setMaxLines(30);
         texts.insertLine("test");
-        joystick = new Joystick(this, 210, height / 2, 100, 20);
+        joystick = new Joystick(this, 210, height / 2 + 80, 100, 20);
         joystick.maxXValue = joystick.maxYValue = 8;
         joystick.minXValue = joystick.minYValue = 0;
 
+        cameraSlider.maxValue = 180;
+        cameraSlider.title = "Camera";
+        cameraSlider.setValue(90);
+
         tabManager.insertDrawable(connectButton, 0);
         tabManager.insertDrawable(disconnectButton, 0);
+        tabManager.insertDrawable(connectedLed, 0);
         tabManager.insertDrawable(connectButton, 1);
         tabManager.insertDrawable(disconnectButton, 1);
+        tabManager.insertDrawable(connectedLed, 1);
+        tabManager.insertDrawable(cameraSlider, 0);
         tabManager.insertDrawable(texts, 0);
         tabManager.insertDrawable(joystick, 0);
 
@@ -68,15 +72,15 @@ public class PCApp extends PApplet {
                 setpointSlider.sliderSize.y);
         sendButton = new Button(this, width / 4 * 3, height / 2, "SEND", 40);
 
-        kpSlider.setTitle("Kp");
+        kpSlider.title = "Kp";
         kpSlider.maxValue = 20;
-        kiSlider.setTitle("Ki");
+        kiSlider.title = "Ki";
         kiSlider.maxValue = 20;
-        kdSlider.setTitle("Kd");
+        kdSlider.title = "Kd";
         kdSlider.maxValue = 20;
-        setpointSlider.setTitle("Setpoint");
+        setpointSlider.title = "Setpoint";
         setpointSlider.maxValue = 30;
-        turnSpeedSlider.setTitle("Turning speed");
+        turnSpeedSlider.title = "Turning speed";
         turnSpeedSlider.maxValue = 300;
 
         tabManager.insertDrawable(kpSlider, 1);
@@ -86,7 +90,7 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
 
-        time = System.currentTimeMillis();
+        hc05.start();
     }
 
     public void draw() {
@@ -95,26 +99,24 @@ public class PCApp extends PApplet {
         tabManager.update();
         tabManager.updateDraw();
 
-        if (connectButton.onActivated() && !hc05.isConnected()) {
+        connectedLed.activated = hc05.isConnected();
+
+        if (connectButton.onActivated()) {
             try {
-                if (hc05.connect()) {
-                    System.out.println("Connected!");
-                    texts.clear();
-                    try {
-                        hc05.sendString("e");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else
-                    System.out.println("Connection went wrong");
+                hc05.connect();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (disconnectButton.onActivated() && hc05.isConnected()) {
+
+        if (hc05.onConnect()) {
+            System.out.println("onConnect");
+            texts.clear();
+        }
+
+        if (disconnectButton.onActivated()) {
             try {
                 hc05.disconnect();
-                System.out.println("Disconnected!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -124,6 +126,8 @@ public class PCApp extends PApplet {
             try {
                 String recv = hc05.getStringFromHC05();
                 if (!recv.equals("")) { // if we actually received data...
+                    if (texts.getNumberOfLines() == 1)
+                        hc05.sendString("e;");
                     texts.insertLine(recv);
                 }
 
@@ -139,8 +143,10 @@ public class PCApp extends PApplet {
                     scanner.close();
                 }
 
-                if (tabManager.activeTab == 0)
+                if (tabManager.activeTab == 0) {
                     hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
+                    hc05.sendString("c" + cameraSlider.getValue() + ";");
+                }
                 if (tabManager.activeTab == 1) {
                     if (sendButton.onActivated()) {
                         hc05.sendString(
@@ -151,17 +157,6 @@ public class PCApp extends PApplet {
                 e.printStackTrace();
             }
         }
-
-        sum += System.currentTimeMillis() - time;
-        count++;
-        if (count >= samples) {
-            avg = sum / (float) samples;
-            System.out.print("\r" + avg + "ms / ");
-            System.out.format("%.2f", 1000 / avg);
-            System.out.print(" fps");
-            sum = count = 0;
-        }
-        time = System.currentTimeMillis();
     }
 
     public void mousePressed() {
