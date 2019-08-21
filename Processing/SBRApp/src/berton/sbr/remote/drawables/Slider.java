@@ -6,12 +6,12 @@ public class Slider implements InputDrawable {
     private PApplet p;
     private boolean following;
     private float cursorMinLimit, cursorMaxLimit;
-    private String title;
 
     public PVector sliderPos, sliderSize, cursorAbsolutePos, cursorSize;
     public float minValue, maxValue;
     public int cursorDefaultColor, sliderColor, cursorActivatedColor;
     public int textSize;
+    public String title;
 
     private void setup(PApplet main, float x, float y, float sliderW, float sliderH) {
         p = main;
@@ -84,12 +84,6 @@ public class Slider implements InputDrawable {
 
     public void setValue(float val) {
         cursorAbsolutePos.x = PApplet.map(val, minValue, maxValue, cursorMinLimit, cursorMaxLimit);
-    }
-
-    public void setTitle(String name) {
-        if (name == null || name.equals(""))
-            return;
-        title = name;
     }
 
     @Override
