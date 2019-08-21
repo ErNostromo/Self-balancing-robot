@@ -44,6 +44,8 @@ public class Led implements Drawable {
 
     @Override
     public void updateDraw() {
+        p.stroke(0);
+        p.strokeWeight(0);
         p.ellipseMode(PConstants.CENTER);
         p.fill(activated ? onColor : offColor);
         p.ellipse(pos.x, pos.y, r, r);
