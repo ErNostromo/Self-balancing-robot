@@ -65,7 +65,7 @@ public class HC05 extends Thread {
     }
 
     public void sendString(String text) {
-        if (device != null && text != null) {
+        if (isConnected() && text != null) {
             // System.out.println("Sending " + text);
             try {
                 os.write(text.getBytes());
@@ -78,7 +78,7 @@ public class HC05 extends Thread {
     }
 
     public boolean isConnected() {
-        return (device != null);
+        return device != null && os != null && is != null;
     }
 
     public void run() {
@@ -155,7 +155,7 @@ public class HC05 extends Thread {
             }
 
             if (toDisconnect) {
-                if (device != null) {
+                if (isConnected()) {
                     try {
                         s.close();
                         os.close();
@@ -168,7 +168,7 @@ public class HC05 extends Thread {
                 System.out.println("Disconnected");
             }
 
-            if (device != null) {
+            if (isConnected()) {
                 try {
                     if (is.available() > 0) {
                         char ch = '\0';
