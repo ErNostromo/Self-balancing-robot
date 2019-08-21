@@ -37,13 +37,18 @@ public class PCApp extends PApplet {
                 "DISCONNECT", 25);
         connectedLed = new Led(this, disconnectButton.pos.x + disconnectButton.size.x / 2 + 50, disconnectButton.pos.y,
                 50);
+        cameraSlider = new Slider(this, 200, connectButton.pos.y + connectButton.size.y / 2 + 70, 300, 50);
         texts = new TextBoxDisplay(this, width / 2, connectButton.pos.y - connectButton.size.y / 2, width / 2 - 20,
                 (height - tabManager.getLastY()) - 50);
         texts.setMaxLines(30);
         texts.insertLine("test");
-        joystick = new Joystick(this, 210, height / 2, 100, 20);
+        joystick = new Joystick(this, 210, height / 2 + 80, 100, 20);
         joystick.maxXValue = joystick.maxYValue = 8;
         joystick.minXValue = joystick.minYValue = 0;
+
+        cameraSlider.maxValue = 180;
+        cameraSlider.title = "Camera";
+        cameraSlider.setValue(90);
 
         tabManager.insertDrawable(connectButton, 0);
         tabManager.insertDrawable(disconnectButton, 0);
@@ -51,6 +56,7 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(connectButton, 1);
         tabManager.insertDrawable(disconnectButton, 1);
         tabManager.insertDrawable(connectedLed, 1);
+        tabManager.insertDrawable(cameraSlider, 0);
         tabManager.insertDrawable(texts, 0);
         tabManager.insertDrawable(joystick, 0);
 
@@ -66,15 +72,15 @@ public class PCApp extends PApplet {
                 setpointSlider.sliderSize.y);
         sendButton = new Button(this, width / 4 * 3, height / 2, "SEND", 40);
 
-        kpSlider.setTitle("Kp");
+        kpSlider.title = "Kp";
         kpSlider.maxValue = 20;
-        kiSlider.setTitle("Ki");
+        kiSlider.title = "Ki";
         kiSlider.maxValue = 20;
-        kdSlider.setTitle("Kd");
+        kdSlider.title = "Kd";
         kdSlider.maxValue = 20;
-        setpointSlider.setTitle("Setpoint");
+        setpointSlider.title = "Setpoint";
         setpointSlider.maxValue = 30;
-        turnSpeedSlider.setTitle("Turning speed");
+        turnSpeedSlider.title = "Turning speed";
         turnSpeedSlider.maxValue = 300;
 
         tabManager.insertDrawable(kpSlider, 1);
@@ -137,8 +143,10 @@ public class PCApp extends PApplet {
                     scanner.close();
                 }
 
-                if (tabManager.activeTab == 0)
+                if (tabManager.activeTab == 0) {
                     hc05.sendString("v" + joystick.getYPower() + "" + joystick.getXPower() + ";");
+                    hc05.sendString("c" + cameraSlider.getValue() + ";");
+                }
                 if (tabManager.activeTab == 1) {
                     if (sendButton.onActivated()) {
                         hc05.sendString(
