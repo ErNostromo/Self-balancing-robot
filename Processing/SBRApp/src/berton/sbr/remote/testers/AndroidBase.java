@@ -56,22 +56,22 @@ public class AndroidBase extends PApplet {
                 cameraSlider.sliderSize.y);
         sendBtn = new Button(this, width / 2, height - 100, "Send", 18);
 
-        cameraSlider.setTitle("Camera");
+        cameraSlider.title = "Camera";
         cameraSlider.minValue = 0;
         cameraSlider.maxValue = 180;
-        kpSlider.setTitle("Kp");
+        kpSlider.title = "Kp";
         kpSlider.minValue = 0;
         kpSlider.maxValue = 10;
-        kiSlider.setTitle("Ki");
+        kiSlider.title = "Ki";
         kiSlider.minValue = 0;
         kiSlider.maxValue = 10;
-        kdSlider.setTitle("Kd");
+        kdSlider.title = "Kd";
         kdSlider.minValue = 0;
         kdSlider.maxValue = 10;
-        setpointSlider.setTitle("Setpoint");
+        setpointSlider.title = "Setpoint";
         setpointSlider.minValue = 0;
         setpointSlider.maxValue = 10;
-        turnSpeedSlider.setTitle("Turning speed");
+        turnSpeedSlider.title = "Turning speed";
         turnSpeedSlider.minValue = 0;
         turnSpeedSlider.maxValue = 10;
         sendBtn.size.x += 40;
