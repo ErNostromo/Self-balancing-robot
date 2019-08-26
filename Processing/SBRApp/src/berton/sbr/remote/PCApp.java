@@ -2,10 +2,9 @@ package berton.sbr.remote;
 
 import processing.core.PApplet;
 
-import berton.sbr.remote.drawables.*;
-
 import java.util.Scanner;
-
+import berton.sbr.remote.drawables.*;
+import berton.sbr.HC05Threaded;
 import berton.sbr.HC05;
 
 public class PCApp extends PApplet {
@@ -27,6 +26,7 @@ public class PCApp extends PApplet {
 
     public void setup() {
         frameRate(60);
+        // hc05 = new HC05Threaded();      
         hc05 = new HC05();
         tabManager = new TabManager(this);
         tabManager.charDimension = 20;
@@ -90,7 +90,7 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
 
-        hc05.start();
+        // hc05.start();
     }
 
     public void draw() {
@@ -110,7 +110,6 @@ public class PCApp extends PApplet {
         }
 
         if (hc05.onConnect()) {
-            System.out.println("onConnect");
             texts.clear();
         }
 
