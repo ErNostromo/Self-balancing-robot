@@ -4,11 +4,12 @@ import berton.sbr.remote.HC05;
 
 public class HC05Monitor {
     public static void main(String[] args) {
-        HC05 h = new HC05();
+        HC05 h;
+        h = new HC05();
         String recv;
         try {
             h.connect();
-            while (true) {
+            while (h.isConnected()) {
                 recv = h.getStringFromHC05();
                 if (!recv.equals("")) {
                     System.out.println(recv);
