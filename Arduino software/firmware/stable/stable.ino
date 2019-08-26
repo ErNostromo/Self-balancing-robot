@@ -96,17 +96,17 @@ unsigned long sum = 0;
 unsigned int avg = 0;
 #endif
 /*
-#ifdef DEBUG                                      //Macros are usually in all capital letters.
-#define DPRINT(...) Serial.print(__VA_ARGS__)     //DPRINT is a macro, debug print
-#define DPRINTLN(...) Serial.println(__VA_ARGS__) //DPRINTLN is a macro, debug print with new line
-#define BPRINT(...) Serial1.print(__VA_ARGS__)
-#define BPRINTLN(...) Serial1.print(__VA_ARGS__)
-#else
-#define DPRINT(...)   //now defines a blank line
-#define DPRINTLN(...) //now defines a blank line
-#define BPRINT(...)   //now defines a blank line
-#define BPRINTLN(...) //now defines a blank line
-#endif
+  #ifdef DEBUG                                      //Macros are usually in all capital letters.
+  #define DPRINT(...) Serial.print(__VA_ARGS__)     //DPRINT is a macro, debug print
+  #define DPRINTLN(...) Serial.println(__VA_ARGS__) //DPRINTLN is a macro, debug print with new line
+  #define BPRINT(...) Serial1.print(__VA_ARGS__)
+  #define BPRINTLN(...) Serial1.print(__VA_ARGS__)
+  #else
+  #define DPRINT(...)   //now defines a blank line
+  #define DPRINTLN(...) //now defines a blank line
+  #define BPRINT(...)   //now defines a blank line
+  #define BPRINTLN(...) //now defines a blank line
+  #endif
 */
 void setup()
 {
@@ -177,18 +177,21 @@ void setup()
   EEPROM.get(40, max_target_speed);
   EEPROM.get(50, turning_speed);
 #ifdef DEBUG
-  Serial.println(pid_p_gain);
-  Serial.println(pid_i_gain);
-  Serial.println(pid_d_gain);
-  Serial.println(pid_setpoint_default);
-  Serial.println(max_target_speed);
-  Serial1.println(turning_speed);
-  Serial1.println(pid_p_gain);
-  Serial1.println(pid_i_gain);
-  Serial1.println(pid_d_gain);
-  Serial1.println(pid_setpoint_default);
-  Serial1.println(max_target_speed);
-  Serial1.println(turning_speed);
+  String toSend = "e";
+  toSend += pid_p_gain;
+  toSend += " ";
+  toSend += pid_i_gain;
+  toSend += " ";
+  toSend += pid_d_gain;
+  toSend += " ";
+  toSend += pid_setpoint_default;
+  toSend += " ";
+  toSend += max_target_speed;
+  toSend += " ";
+  toSend += turning_speed;
+  toSend += " ";
+  Serial.println(toSend);
+  Serial1.println(toSend);
 #endif
 
   for (receive_counter = 0; receive_counter < 500; receive_counter++)
@@ -235,69 +238,73 @@ void loop()
       type = inputString.charAt(0);
       switch (type)
       {
-      case 'v':
-        inChar1 = inputString.charAt(1);
-        inChar2 = inputString.charAt(2);
-        /*
-              Serial.print("V: ");
-              Serial.print(inChar1);
-              Serial.print(", ");
-              Serial.println(inChar2);
+        case 'v':
+          inChar1 = inputString.charAt(1);
+          inChar2 = inputString.charAt(2);
+          /*
+                Serial.print("V: ");
+                Serial.print(inChar1);
+                Serial.print(", ");
+                Serial.println(inChar2);
           */
-        break;
-      case 's':
-        EEPROM.put(pid_setpoint_default_addr, inputString.substring(1, inputString.indexOf(';')).toFloat());
-        /*
-              Serial.print("S: ");
-              Serial.println(pid_setpoint_default);
+          break;
+        case 's':
+          EEPROM.put(pid_setpoint_default_addr, inputString.substring(1, inputString.indexOf(';')).toFloat());
+          /*
+                Serial.print("S: ");
+                Serial.println(pid_setpoint_default);
           */
-        inChar1 = 0;
-        break;
-      case 'k':
-        firstIndex = inputString.indexOf(',');
-        pid_p_gain = inputString.substring(1, firstIndex).toFloat();
+          inChar1 = 0;
+          break;
+        case 'k':
+          firstIndex = inputString.indexOf(',');
+          pid_p_gain = inputString.substring(1, firstIndex).toFloat();
 
-        secondIndex = inputString.indexOf(',', firstIndex + 1);
-        pid_i_gain = inputString.substring(firstIndex + 1, secondIndex).toFloat();
+          secondIndex = inputString.indexOf(',', firstIndex + 1);
+          pid_i_gain = inputString.substring(firstIndex + 1, secondIndex).toFloat();
 
-        thirdIndex = inputString.indexOf(';');
-        pid_d_gain = inputString.substring(secondIndex + 1, thirdIndex).toFloat();
-        EEPROM.put(kp_addr, pid_p_gain);
-        EEPROM.put(ki_addr, pid_i_gain);
-        EEPROM.put(kd_addr, pid_d_gain);
-        /*
-              Serial.print("K: ");
-              Serial.print (pid_p_gain);
-              Serial.print(", ");
-              Serial.print(pid_i_gain);
-              Serial.print(", ");
-              Serial.println(pid_d_gain);
+          thirdIndex = inputString.indexOf(';');
+          pid_d_gain = inputString.substring(secondIndex + 1, thirdIndex).toFloat();
+          EEPROM.put(kp_addr, pid_p_gain);
+          EEPROM.put(ki_addr, pid_i_gain);
+          EEPROM.put(kd_addr, pid_d_gain);
+          /*
+                Serial.print("K: ");
+                Serial.print (pid_p_gain);
+                Serial.print(", ");
+                Serial.print(pid_i_gain);
+                Serial.print(", ");
+                Serial.println(pid_d_gain);
           */
-        break;
+          break;
 
-      case 't':
-        turning_speed = inputString.substring(1).toFloat();
-        EEPROM.put(turning_speed_addr, turning_speed);
-        /*
-              Serial.println("T: ");
-              Serial.println(turning_speed);
+        case 't':
+          turning_speed = inputString.substring(1).toFloat();
+          EEPROM.put(turning_speed_addr, turning_speed);
+          /*
+                Serial.println("T: ");
+                Serial.println(turning_speed);
           */
-        break;
+          break;
 
-      case 'c':
-        servo_pos = inputString.substring(1).toFloat();
-        /*
-              Serial.println("C: ");
-              Serial.println(servo_pos);
+        case 'c':
+          servo_pos = inputString.substring(1).toFloat();
+          /*
+                Serial.println("C: ");
+                Serial.println(servo_pos);
           */
-        break;
+          break;
 
-      case 'u':
-        ultras_enable_char = inputString.charAt(1);
-        if (ultras_enable_char == '1')
-          ultras_enable = 1;
-        else if (ultras_enable_char == '0')
-          ultras_enable = 0;
+        case 'u':
+          ultras_enable_char = inputString.charAt(1);
+          if (ultras_enable_char == '1')
+            ultras_enable = 1;
+          else if (ultras_enable_char == '0')
+            ultras_enable = 0;
+          break;
+
+        case 'e':
+          print_eeprom_constants();
       }
       inputString = "";
       inChar = 0;
@@ -455,7 +462,11 @@ void loop()
     delayMicroseconds(10);
     digitalWrite(trigger, LOW);
     long durata = pulseIn(echo, HIGH);
-    long distanza = 0.034 * durata / 2;
+    long distanza = 0.034 *
+    Serial.println(pid_i_gain);
+    Serial.println(pid_d_gain);
+    Serial.println(pid_setpoint_default);
+    Serial.println(max_target_speed); durata / 2;
     //Serial.println(distanza);
     if (distanza > 12)
       pid_setpoint_bt = -3.5 + pid_setpoint_default;
@@ -481,100 +492,118 @@ void loop()
   */
   switch (inChar2)
   {
-  case '8':
-    if (pid_output_right < pid_output + turning_speed)
-      pid_vel_right += 0.1;
-    if (pid_output_left > pid_output - turning_speed)
-      pid_vel_left -= 0.1;
-    break;
+    case '8':
+      if (pid_output_right < pid_output + turning_speed)
+        pid_vel_right += 0.1;
+      if (pid_output_left > pid_output - turning_speed)
+        pid_vel_left -= 0.1;
+      break;
 
-  case '7':
-    if (pid_output_right < pid_output + (3 * turning_speed / 4))
-      pid_vel_right += 0.1;
-    if (pid_output_left > pid_output - (3 * turning_speed / 4))
-      pid_vel_left -= 0.1;
-    break;
+    case '7':
+      if (pid_output_right < pid_output + (3 * turning_speed / 4))
+        pid_vel_right += 0.1;
+      if (pid_output_left > pid_output - (3 * turning_speed / 4))
+        pid_vel_left -= 0.1;
+      break;
 
-  case '6':
-    if (pid_output_right < pid_output + (2 * turning_speed / 4))
-      pid_vel_right += 0.1;
-    if (pid_output_left > pid_output - (2 * turning_speed / 4))
-      pid_vel_left -= 0.1;
-    break;
+    case '6':
+      if (pid_output_right < pid_output + (2 * turning_speed / 4))
+        pid_vel_right += 0.1;
+      if (pid_output_left > pid_output - (2 * turning_speed / 4))
+        pid_vel_left -= 0.1;
+      break;
 
-  case '5':
-    if (pid_output_right < pid_output + (turning_speed / 4))
-      pid_vel_right += 0.1;
-    if (pid_output_left > pid_output - (turning_speed / 4))
-      pid_vel_left -= 0.1;
-    break;
+    case '5':
+      if (pid_output_right < pid_output + (turning_speed / 4))
+        pid_vel_right += 0.1;
+      if (pid_output_left > pid_output - (turning_speed / 4))
+        pid_vel_left -= 0.1;
+      break;
 
-  case '3':
-    if (pid_output_right > pid_output - (turning_speed / 4))
-      pid_vel_right -= 0.1;
-    if (pid_output_left < pid_output + (turning_speed / 4))
-      pid_vel_left += 0.1;
-    break;
+    case '3':
+      if (pid_output_right > pid_output - (turning_speed / 4))
+        pid_vel_right -= 0.1;
+      if (pid_output_left < pid_output + (turning_speed / 4))
+        pid_vel_left += 0.1;
+      break;
 
-  case '2':
-    if (pid_output_right > pid_output - (turning_speed / 2))
-      pid_vel_right -= 0.1;
-    if (pid_output_left < pid_output + (turning_speed / 2))
-      pid_vel_left += 0.1;
-    break;
-  case '1':
-    if (pid_output_right > pid_output - (3 * turning_speed / 4))
-      pid_vel_right -= 0.1;
-    if (pid_output_left < pid_output + (3 * turning_speed / 4))
-      pid_vel_left += 0.1;
-    break;
+    case '2':
+      if (pid_output_right > pid_output - (turning_speed / 2))
+        pid_vel_right -= 0.1;
+      if (pid_output_left < pid_output + (turning_speed / 2))
+        pid_vel_left += 0.1;
+      break;
+    case '1':
+      if (pid_output_right > pid_output - (3 * turning_speed / 4))
+        pid_vel_right -= 0.1;
+      if (pid_output_left < pid_output + (3 * turning_speed / 4))
+        pid_vel_left += 0.1;
+      break;
 
-  case '0':
-    if (pid_output_right > pid_output - turning_speed)
-      pid_vel_right -= 0.1;
-    if (pid_output_left < pid_output + turning_speed)
-      pid_vel_left += 0.1;
-    break;
-  default:
-    if (pid_output_right >= 0.3 + pid_output)
-      pid_vel_right -= 0.5;
-    else if (pid_output_right <= -0.3 - pid_output)
-      pid_vel_right += 0.5;
-    else
-      pid_vel_right = 0;
-    if (pid_output_left >= 0.3 + pid_output)
-      pid_vel_left -= 0.5;
-    else if (pid_output_left <= -0.3 - pid_output)
-      pid_vel_left += 0.5;
-    else
-      pid_vel_left = 0;
-    break;
+    case '0':
+      if (pid_output_right > pid_output - turning_speed)
+        pid_vel_right -= 0.1;
+      if (pid_output_left < pid_output + turning_speed)
+        pid_vel_left += 0.1;
+      break;
+    default:
+      if (pid_output_right >= 0.3 + pid_output)
+        pid_vel_right -= 0.5;
+      else if (pid_output_right <= -0.3 - pid_output)
+        pid_vel_right += 0.5;
+      else
+        pid_vel_right = 0;
+      if (pid_output_left >= 0.3 + pid_output)
+        pid_vel_left -= 0.5;
+      else if (pid_output_left <= -0.3 - pid_output)
+        pid_vel_left += 0.5;
+      else
+        pid_vel_left = 0;
+      break;
   }
 
   if (counter <= 0)
   {
     counter = counter_default;
-    Serial1.print(angle_acc);
-    Serial1.print(" ");
-    Serial1.print(angle_gyro);
-    Serial1.print(" ");
-    Serial1.print(pid_error_temp);
-    Serial1.print(" ");
-    Serial1.print(pid_setpoint);
-    Serial1.print(" ");
-    Serial1.print(pid_output);
-    Serial1.print(" ");
-    Serial1.print(pid_vel_left);
-    Serial1.print(" ");
-    Serial1.print(pid_vel_right);
+    String toSend = "";
+    toSend += angle_acc;
+    toSend += " ";
+    toSend += angle_gyro;
+    toSend += " ";
+    toSend += pid_error_temp;
+    toSend += " ";
+    toSend += pid_setpoint;
+    toSend += " ";
+    toSend += pid_output;
+    toSend += " ";
+    toSend += pid_vel_left;
+    toSend += " ";
+    toSend += pid_vel_right;
+    /*
+      Serial1.print(angle_acc);
+      Serial1.print(" ");
+      Serial1.print(angle_gyro);
+      Serial1.print(" ");
+      Serial1.print(pid_error_temp);
+      Serial1.print(" ");
+      Serial1.print(pid_setpoint);
+      Serial1.print(" ");
+      Serial1.print(pid_output);
+      Serial1.print(" ");
+      Serial1.print(pid_vel_left);
+      Serial1.print(" ");
+      Serial1.print(pid_vel_right);
+    */
 #ifdef DEBUG
     avg = sum / counter_default;
-    Serial1.print(" ");
-    Serial1.print(avg);
+    toSend += " ";
+    toSend += avg;
     sum = 0;
     avg = 0;
 #endif
-    Serial1.println(" ;");
+    toSend += ";";
+    Serial.println(toSend);
+    Serial1.println(toSend);
   }
   //digitalWrite(enable_motor1_pin, enable_motor1);
 
@@ -638,11 +667,11 @@ ISR(TIMER3_COMPA_vect)
   //Left motor pulse calculations
   throttle_counter_left_motor++; //Increase the throttle_counter_left_motor variable by 1 every time this routine is executed
   if (throttle_counter_left_motor > throttle_left_motor_memory)
-  {                                                   //If the number of loops is larger then the throttle_left_motor_memory variable
+  { //If the number of loops is larger then the throttle_left_motor_memory variable
     throttle_counter_left_motor = 0;                  //Reset the throttle_counter_left_motor variable
     throttle_left_motor_memory = throttle_left_motor; //Load the next throttle_left_motor variable
     if (throttle_left_motor_memory < 0)
-    {                                   //If the throttle_left_motor_memory is negative
+    { //If the throttle_left_motor_memory is negative
       PORTB &= 0b11110111;              //Set output 4 low to reverse the direction of the stepper controller
       throttle_left_motor_memory *= -1; //Invert the throttle_left_motor_memory variable
     }
@@ -662,11 +691,11 @@ ISR(TIMER3_COMPA_vect)
   //right motor pulse calculations
   throttle_counter_right_motor++; //Increase the throttle_counter_right_motor variable by 1 every time the routine is executed
   if (throttle_counter_right_motor > throttle_right_motor_memory)
-  {                                                     //If the number of loops is larger then the throttle_right_motor_memory variable
+  { //If the number of loops is larger then the throttle_right_motor_memory variable
     throttle_counter_right_motor = 0;                   //Reset the throttle_counter_right_motor variable
     throttle_right_motor_memory = throttle_right_motor; //Load the next throttle_right_motor variable
     if (throttle_right_motor_memory < 0)
-    {                                    //If the throttle_right_motor_memory is negative
+    { //If the throttle_right_motor_memory is negative
       PORTB &= 0b10111111;               //Set output 5 low to reverse the direction of the stepper controller
       throttle_right_motor_memory *= -1; //Invert the throttle_right_motor_memory variable
     }
@@ -677,4 +706,22 @@ ISR(TIMER3_COMPA_vect)
     PORTB |= 0b00000100; //Set output 4 high to create a pulse for the stepper controller
   else if (throttle_counter_right_motor == 2 || throttle_counter_right_motor == 0)
     PORTB &= 0b11111011; //Set output 4 low because the pulse only has to last for 20us
+}
+
+void print_eeprom_constants() {
+  String toSend = "e ";
+  //kp, ki, kd, setpoint, turnSpeed
+  toSend += pid_p_gain;
+  toSend += " ";
+  toSend += pid_i_gain;
+  toSend += " ";
+  toSend += pid_d_gain;
+  toSend += " ";
+  toSend += pid_setpoint_default;
+  toSend += " ";
+  toSend += turning_speed;
+  toSend += ";";
+  Serial1.println(toSend);
+  Serial.println(toSend);
+  toSend = "";
 }
