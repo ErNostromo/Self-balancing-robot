@@ -1,4 +1,4 @@
-package berton.sbr;
+package berton.sbr.remote;
 
 import java.io.IOException;
 import java.io.InputStream;
