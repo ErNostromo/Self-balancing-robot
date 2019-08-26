@@ -15,8 +15,9 @@ import javax.microedition.io.StreamConnection;
 import javax.microedition.io.Connector;
 
 public class HC05Threaded extends Thread {
-    private static final String mac = "00211303D07A";
-    private static final String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
+    public static String mac = "00211303D07A";
+    public static String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
+    public static char END_CH = ';';
 
     private volatile String recvString;
     private volatile String bufferString;
@@ -29,8 +30,6 @@ public class HC05Threaded extends Thread {
     private volatile boolean toDisconnect;
     private volatile boolean onConnect;
     private volatile boolean quit;
-
-    public static final char END_CH = ';';
 
     private void setup() {
         recvString = "";

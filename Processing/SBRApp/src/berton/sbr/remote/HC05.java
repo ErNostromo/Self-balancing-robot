@@ -15,9 +15,9 @@ import javax.microedition.io.StreamConnection;
 import javax.microedition.io.Connector;
 
 public class HC05 {
-    private static final String mac = "00211303D07A";
-    private static final String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
-    public static final char END_CH = ';';
+    public static String mac = "00211303D07A";
+    public static String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
+    public static char END_CH = ';';
 
     private String recvString;
     private String bufferString;
