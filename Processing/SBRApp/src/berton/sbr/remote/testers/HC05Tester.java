@@ -1,6 +1,8 @@
 package berton.sbr.remote.testers;
 
-import berton.sbr.HC05;
+import java.io.IOException;
+
+import berton.sbr.remote.HC05;
 
 public class HC05Tester {
     public static void main(String[] args) {
@@ -16,11 +18,12 @@ public class HC05Tester {
             time = System.currentTimeMillis();
             try {
                 toPrint = a.getStringFromHC05();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            toPrint += "  -  " + (System.currentTimeMillis() - time) + " ms";
             System.out.println(toPrint);
+            System.out.println(System.currentTimeMillis() - time);
+            time = System.currentTimeMillis();
         }
     }
 }
