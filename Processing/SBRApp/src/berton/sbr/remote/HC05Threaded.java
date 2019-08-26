@@ -49,15 +49,15 @@ public class HC05Threaded extends Thread {
         setup();
     }
 
-    public void connect() throws Exception {
+    public void connect() {
         toConnect = true;
     }
 
-    public void disconnect() throws IOException {
+    public void disconnect() {
         toDisconnect = true;
     }
 
-    public String getStringFromHC05() throws IOException {
+    public String getStringFromHC05() {
         String s = recvString.toString();
         recvString = "";
         return s;

@@ -43,7 +43,7 @@ public class HC05 {
         setup();
     }
 
-    public void connect() throws Exception {
+    public void connect() {
         System.out.println("Connecting...");
         scanFinished = false;
         try {

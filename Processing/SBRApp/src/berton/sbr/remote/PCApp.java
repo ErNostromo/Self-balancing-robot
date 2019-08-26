@@ -109,11 +109,7 @@ public class PCApp extends PApplet {
         connectedLed.activated = hc05.isConnected();
 
         if (connectButton.onActivated()) {
-            try {
-                hc05.connect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            hc05.connect();
         }
 
         if (hc05.onConnect()) {
