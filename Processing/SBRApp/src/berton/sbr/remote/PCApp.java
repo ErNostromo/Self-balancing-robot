@@ -4,8 +4,8 @@ import processing.core.PApplet;
 
 import java.util.Scanner;
 import berton.sbr.remote.drawables.*;
-import berton.sbr.HC05Threaded;
-import berton.sbr.HC05;
+import berton.sbr.remote.HC05Threaded;
+import berton.sbr.remote.HC05;
 
 public class PCApp extends PApplet {
     private HC05 hc05;
@@ -15,6 +15,11 @@ public class PCApp extends PApplet {
     private Joystick joystick;
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Led connectedLed;
+
+    long start;
+    long time;
+    int count;
+    double avg;
 
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.PCApp");
@@ -90,6 +95,8 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
 
+        start = System.currentTimeMillis();
+        time = start;
         // hc05.start();
     }
 
@@ -155,6 +162,18 @@ public class PCApp extends PApplet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        avg += System.currentTimeMillis() - time;
+        count++;
+        time = System.currentTimeMillis();
+
+        if (System.currentTimeMillis() > start + 1000) {
+            avg = avg / count;
+            System.out.print("\r" + String.format("%.2f", avg) + " ms - " + String.format("%.2f", 1000 / avg));
+            avg = count = 0;
+            start = System.currentTimeMillis();
+            time = start;
         }
     }
 
