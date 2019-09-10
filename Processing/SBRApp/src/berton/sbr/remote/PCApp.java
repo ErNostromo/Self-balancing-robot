@@ -115,17 +115,20 @@ public class PCApp extends PApplet {
         connectedLed.activated = hc05.isConnected();
 
         if (connectButton.onActivated()) {
-            //hc05.connect();
-            tabManager.showToast("Toast");
+            tabManager.showToast("Connecting...");
+            hc05.connect();
         }
 
         if (hc05.onConnect()) {
+            tabManager.showToast("Connected!");
             texts.clear();
         }
 
         if (disconnectButton.onActivated()) {
             try {
+                tabManager.showToast("Disconnecting...");
                 hc05.disconnect();
+                tabManager.showToast("Disconnected!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -173,7 +176,7 @@ public class PCApp extends PApplet {
 
         if (System.currentTimeMillis() > start + 1000) {
             avg = avg / count;
-            System.out.print("\r" + String.format("%.2f", avg) + " ms - " + String.format("%.2f", 1000 / avg));
+            // System.out.print("\r" + String.format("%.2f", avg) + " ms - " + String.format("%.2f", 1000 / avg));
             avg = count = 0;
             start = System.currentTimeMillis();
             time = start;

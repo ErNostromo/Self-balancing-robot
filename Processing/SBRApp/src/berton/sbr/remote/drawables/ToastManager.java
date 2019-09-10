@@ -10,24 +10,27 @@ public class ToastManager implements Drawable {
     private PApplet p;
     private LinkedList<String> toasts;
     private Iterator<String> iterator;
-    private int state;
-    private int currentTransparency;
     private String currentText;
     private long lastTime;
+    private int charDimension;
+    private boolean showingToast;
+    private boolean enableUpdate;
 
     public int mainColor;
-    public int charDimension;
-    public int millisDelay;
+    public int millisDuration;
+    public int millisWait;
 
     private void setup(PApplet sketch) {
         p = sketch;
         toasts = new LinkedList<String>();
         iterator = toasts.iterator();
 
-        currentTransparency = 0;
-        mainColor = 127;
         charDimension = 16;
-        millisDelay = 1000;
+        showingToast = false;
+        enableUpdate = true;
+        mainColor = 127;
+        millisDuration = 2000;
+        millisWait = 500;
     }
 
     public ToastManager(PApplet sketch) {
@@ -40,53 +43,43 @@ public class ToastManager implements Drawable {
 
     @Override
     public void update() {
-
-        switch (state) {
-        // Waiting
-        case 0:
-            if (iterator.hasNext()) {
+        if (iterator.hasNext()) {
+            if (enableUpdate && !showingToast) {
                 currentText = toasts.removeFirst();
-                System.out.println(currentText);
-                state++;
-                currentTransparency = 0;
-            }
-            break;
-
-        // Appearing
-        case 1:
-            currentTransparency++;
-            if (currentTransparency >= 255) {
-                currentTransparency = 255;
-                state++;
+                showingToast = true;
+                enableUpdate = false;
                 lastTime = System.currentTimeMillis();
             }
-            break;
-
-        // Staying
-        case 2:
-            if (System.currentTimeMillis() >= lastTime + millisDelay) {
-                state++;
+        }
+        if (showingToast && System.currentTimeMillis() >= lastTime + millisDuration) {
+            showingToast = false;
+            lastTime = System.currentTimeMillis();
+        }
+        if (!showingToast && !enableUpdate) {
+            if (System.currentTimeMillis() >= lastTime + millisWait) {
+                enableUpdate = true;
             }
-            break;
-
-        // Disappearing
-        case 3:
-            currentTransparency--;
-            if (currentTransparency <= 0) {
-                currentTransparency = 0;
-            }
-            break;
         }
     }
 
     @Override
     public void updateDraw() {
-        if (state==0) return;
-        p.fill(mainColor);
-        p.stroke(0);
-        p.strokeWeight(0);
-        p.ellipseMode(PConstants.RADIUS);
-        p.tint(255, currentTransparency);
-        p.ellipse(p.width/2, 300, 30,30);
+        if (showingToast) {
+            float rectWidth = p.textWidth(currentText);
+            float radius = charDimension + 10;
+            float y = p.height - radius - 10;
+            p.noStroke();
+            p.ellipseMode(PConstants.RADIUS);
+            p.fill(mainColor);
+            p.ellipse(p.width / 2 - rectWidth / 2, y, radius, radius);
+            p.ellipse(p.width / 2 + rectWidth / 2, y, radius, radius);
+            p.rectMode(PConstants.CENTER);
+            p.rect(p.width / 2, y, rectWidth, radius * 2);
+
+            p.fill(0);
+            p.textSize(charDimension);
+            p.textAlign(PConstants.CENTER, PConstants.CENTER);
+            p.text(currentText, p.width / 2, y);
+        }
     }
 }
