@@ -5,8 +5,8 @@ import java.util.Vector;
 import processing.core.*;
 
 /**
- * TabManager manages all the tabs to be included in the sketch. It also does the
- * update() and updateDraw() of any Drawable added to the current tab.
+ * TabManager manages all the tabs to be included in the sketch. It also does
+ * the update() and updateDraw() of any Drawable added to the current tab.
  */
 public class TabManager implements Drawable {
     private Vector<Tab> tabs;
@@ -15,6 +15,7 @@ public class TabManager implements Drawable {
     private float nextX;
     private int row;
     private InputDrawable activeDrawable;
+    private ToastManager toastManager;
 
     public int charDimension;
     public float height;
@@ -62,8 +63,9 @@ public class TabManager implements Drawable {
     }
 
     /**
-     * Add a new tab. The width can be configured by setting the
-     * charDimension variable, but you can set directly the height.
+     * Add a new tab. The width can be configured by setting the charDimension
+     * variable, but you can set directly the height.
+     * 
      * @param tabName the name of the new Tab
      */
     public void addTab(String tabName) {
@@ -88,7 +90,8 @@ public class TabManager implements Drawable {
 
     /**
      * Insert a new Drawable in the specified Tab.
-     * @param d the Drawable
+     * 
+     * @param d   the Drawable
      * @param tab the index of the Tab
      */
     public void insertDrawable(Drawable d, int tab) {
@@ -99,6 +102,7 @@ public class TabManager implements Drawable {
 
     /**
      * Get the Drawable-s stored inside the specified tab
+     * 
      * @param tab the tab index
      * @return an array of Drawable
      */
@@ -108,6 +112,7 @@ public class TabManager implements Drawable {
 
     /**
      * Get the Drawable-s stored inside the currently active tab
+     * 
      * @return an array of Drawable
      */
     public Drawable[] getDrawables() {
@@ -116,6 +121,7 @@ public class TabManager implements Drawable {
 
     /**
      * Get the y position of the last tab (to know where to start drawing drawables)
+     * 
      * @return the y position of the last tab
      */
     public float getLastY() {
@@ -123,9 +129,20 @@ public class TabManager implements Drawable {
         return tab.pos.y + tab.size.y;
     }
 
+    public void addToastManager(ToastManager t) {
+        toastManager = t;
+    }
+
+    public void showToast(String text) {
+        if (toastManager == null)
+            addToastManager(new ToastManager(p));
+        toastManager.addToast(text);
+    }
+
     /**
-     * Get the currently active tab; if the Drawable-s stored are NOT InputDrawable-s,
-     * update them; otherwise get the activeDrawable (using isBeingUsed()) and update it.
+     * Get the currently active tab; if the Drawable-s stored are NOT
+     * InputDrawable-s, update them; otherwise get the activeDrawable (using
+     * isBeingUsed()) and update it.
      */
     @Override
     public void update() {
@@ -146,12 +163,14 @@ public class TabManager implements Drawable {
                         // if we have no activeDrawable update the Drawable
                         if (activeDrawable == null) {
                             in.update();
-                            // change the activeDrawable if the current Drawable isBeingUsed() (clicked, dragged, etc)
+                            // change the activeDrawable if the current Drawable isBeingUsed() (clicked,
+                            // dragged, etc)
                             if (in.isBeingUsed())
                                 activeDrawable = in;
                         } else { // else only update the activeDrawable
                             activeDrawable.update();
-                            // but when the mouse gets released and the activeDrawable isn't being used anymore
+                            // but when the mouse gets released and the activeDrawable isn't being used
+                            // anymore
                             // we set it back to null
                             if (!p.mousePressed && !activeDrawable.isBeingUsed()) {
                                 activeDrawable = null;
@@ -163,10 +182,13 @@ public class TabManager implements Drawable {
                 }
             }
         }
+        if (toastManager != null)
+            toastManager.update();
     }
 
     /**
-     * Update the draws of all the Tabs, and the Drawables of the currently active one.
+     * Update the draws of all the Tabs, and the Drawables of the currently active
+     * one.
      */
     @Override
     public void updateDraw() {
@@ -195,5 +217,7 @@ public class TabManager implements Drawable {
                 p.rect(t.pos.x + t.size.x, t.pos.y, p.width, t.pos.y + t.size.y);
             }
         }
+        if (toastManager != null)
+            toastManager.updateDraw();
     }
 }
