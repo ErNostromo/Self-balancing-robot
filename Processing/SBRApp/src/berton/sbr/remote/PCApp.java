@@ -17,9 +17,6 @@ public class PCApp extends PApplet {
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Led connectedLed;
 
-    private LinkedList<String> toasts;
-    private int toastState;
-
     long start;
     long time;
     int count;
@@ -98,8 +95,6 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(setpointSlider, 1);
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
-
-        toasts = new LinkedList<String>();
 
         start = System.currentTimeMillis();
         time = start;
