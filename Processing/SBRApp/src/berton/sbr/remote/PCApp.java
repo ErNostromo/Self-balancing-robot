@@ -2,7 +2,6 @@ package berton.sbr.remote;
 
 import processing.core.PApplet;
 
-import java.util.LinkedList;
 import java.util.Scanner;
 import berton.sbr.remote.drawables.*;
 import berton.sbr.remote.HC05Threaded;
@@ -16,9 +15,6 @@ public class PCApp extends PApplet {
     private Joystick joystick;
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Led connectedLed;
-
-    private LinkedList<String> toasts;
-    private int toastState;
 
     long start;
     long time;
@@ -98,8 +94,6 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(setpointSlider, 1);
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
-
-        toasts = new LinkedList<String>();
 
         start = System.currentTimeMillis();
         time = start;
