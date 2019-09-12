@@ -16,10 +16,10 @@ public class PCApp extends PApplet {
     private Slider cameraSlider, kpSlider, kdSlider, kiSlider, setpointSlider, turnSpeedSlider;
     private Led connectedLed;
 
-    long start;
-    long time;
-    int count;
-    double avg;
+    // long start;
+    // long time;
+    // int count;
+    // double avg;
 
     public static void main(String[] args) {
         PApplet.main("berton.sbr.remote.PCApp");
@@ -94,8 +94,8 @@ public class PCApp extends PApplet {
         tabManager.insertDrawable(turnSpeedSlider, 1);
         tabManager.insertDrawable(sendButton, 1);
 
-        start = System.currentTimeMillis();
-        time = start;
+        // start = System.currentTimeMillis();
+        // time = start;
         // hc05.start();
     }
 
@@ -163,17 +163,17 @@ public class PCApp extends PApplet {
             }
         }
 
-        avg += System.currentTimeMillis() - time;
-        count++;
-        time = System.currentTimeMillis();
+        // avg += System.currentTimeMillis() - time;
+        // count++;
+        // time = System.currentTimeMillis();
 
-        if (System.currentTimeMillis() > start + 1000) {
-            avg = avg / count;
-            // System.out.print("\r" + String.format("%.2f", avg) + " ms - " + String.format("%.2f", 1000 / avg));
-            avg = count = 0;
-            start = System.currentTimeMillis();
-            time = start;
-        }
+        // if (System.currentTimeMillis() > start + 1000) {
+        //     avg = avg / count;
+        //     // System.out.print("\r" + String.format("%.2f", avg) + " ms - " + String.format("%.2f", 1000 / avg));
+        //     avg = count = 0;
+        //     start = System.currentTimeMillis();
+        //     time = start;
+        // }
     }
 
     public void mousePressed() {
