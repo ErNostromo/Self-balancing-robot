@@ -82,8 +82,8 @@ public class TabManager implements Drawable {
         // activate the first tab by default
         if (tabs.size() <= 1)
             activeTab = 0;
-        System.out.println("Added tab at x " + t.pos.x + ", y " + t.pos.y + ", width " + t.size.x + ", height "
-                + t.size.y + ", name " + t.name);
+        // System.out.println("Added tab at x " + t.pos.x + ", y " + t.pos.y + ", width " + t.size.x + ", height "
+        //         + t.size.y + ", name " + t.name);
         // update the next tab position
         nextX += t.size.x;
     }
