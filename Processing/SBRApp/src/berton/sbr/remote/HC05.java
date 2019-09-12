@@ -86,6 +86,7 @@ public class HC05 {
             });
         } catch (BluetoothStateException e) {
             e.printStackTrace();
+            return;
         }
         while (!scanFinished)
             try {
