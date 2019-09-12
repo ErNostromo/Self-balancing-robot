@@ -109,7 +109,15 @@ public class PCApp extends PApplet {
 
         if (connectButton.onActivated()) {
             tabManager.showToast("Connecting...");
-            hc05.connect();
+            switch(hc05.connect()){
+                case 0:
+                case 1:
+                    tabManager.showToast("Error in bluetooth library (do you have a bt device?)");
+                case 2:
+                    tabManager.showToast("Connection unsuccessful");
+                case 3:
+                    tabManager.showToast("Connection unsuccessful/device not found");
+            }
         }
 
         if (hc05.onConnect()) {

@@ -43,7 +43,7 @@ public class HC05 {
         setup();
     }
 
-    public void connect() {
+    public int connect() {
         System.out.println("Connecting...");
         scanFinished = false;
         try {
@@ -86,7 +86,7 @@ public class HC05 {
             });
         } catch (BluetoothStateException e) {
             e.printStackTrace();
-            return;
+            return 1;
         }
         while (!scanFinished)
             try {
@@ -102,12 +102,15 @@ public class HC05 {
                 os = s.openOutputStream();
                 onConnect = true;
                 System.out.println("Connection successful");
+                return 0;
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Connection unsuccessful");
+                return 2;
             }
         } else {
             System.out.println("Connection unsuccesful/Device not found. Retry.");
+            return 3;
         }
     }
 
