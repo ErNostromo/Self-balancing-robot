@@ -46,7 +46,6 @@ public class PCApp extends PApplet {
         texts = new TextBoxDisplay(this, width / 2, connectButton.pos.y - connectButton.size.y / 2, width / 2 - 20,
                 (height - tabManager.getLastY()) - 50);
         texts.setMaxLines(30);
-        texts.insertLine("test");
         joystick = new Joystick(this, 210, height / 2 + 80, 100, 20);
         joystick.maxXValue = joystick.maxYValue = 8;
         joystick.minXValue = joystick.minYValue = 0;
