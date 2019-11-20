@@ -14,8 +14,23 @@ import javax.bluetooth.ServiceRecord;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.Connector;
 
+/**
+ * <h4>Public variables:</h4>
+ * <ul style="list-style-type:disc;">
+ * <li> <code> public static String mac</code>: the mac address of the target HC05 </li>
+ * <li> <code> public static String hcName</code>: the visible name of the target HC05. If the mac is not set the name will be used instead </li>
+ * <li> <code> public static String url</code>: url for the bluetooth services. Leave default if not sure. </li>
+ * <li> <code> public staitc char END_CH</code>: end character for both transmission and reception of strings with the target HC05 </li>
+ * </ul>
+ * 
+ * How to use: after creating the object just use {@code hc05.start()}. Then you can use {@code void connect()/disconnect()} for
+ * obvious reasons, {@code boolean onConnect()/onDisconnect()} to execute actions on {@code connection/disconnection}.
+ * Receive strings with {@code String getStringFromHC05()}, send with {@code void sendString(String s)}. Quit using {@code void disableThread()}.
+ * 
+ */
 public class HC05Threaded extends Thread {
     public static String mac = "00211303D07A";
+    public static String hcName = "HC.*";
     public static String url = "btspp://" + mac + ":1;authenticate=false;encrypt=false;master=false";
     public static char END_CH = ';';
 
@@ -57,6 +72,17 @@ public class HC05Threaded extends Thread {
         toDisconnect = true;
     }
 
+    /**
+     * Return the last received string from the HC05.
+     * <pre> {@code 
+     * public String getStringFromHC05() {
+     *    String s = recvString.toString();
+     *    recvString = "";
+     *    return s;
+     * }
+     * </pre>
+     * @return the last string received, if any.
+     */
     public String getStringFromHC05() {
         String s = recvString.toString();
         recvString = "";
@@ -96,7 +122,7 @@ public class HC05Threaded extends Thread {
                                         if (mac == null) {
                                             String name = btDevice.getFriendlyName(false);
                                             System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
-                                            if (name.matches("HC.*")) {
+                                            if (name.matches(hcName)) {
                                                 System.out.println("Device found by name.");
                                                 device = btDevice;
                                                 scanFinished = true;
